@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "title": "Welcome to BOSA Newsletter",
+    "content": "This is our first newsletter! Stay tuned for updates."
+  },
+  {
+    "id": 2,
+    "title": "Community Initiatives",
+    "content": "Learn how we are impacting the community through philanthropy."
+  },
+  {
+    "id": 3,
+    "title": "Upcoming Events",
+    "content": "Check out our upcoming events and activities."
+  }
+]
