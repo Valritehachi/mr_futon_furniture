@@ -62,32 +62,56 @@
 
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import dynamic from "next/dynamic";
+import { supabase } from "@/utils/supabaseClient";
+
+// Dynamically import ReactQuill only on the client
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 import "react-quill/dist/quill.snow.css";
 
-// Dynamically import ReactQuill, disable SSR
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
-
 export default function ArticleEditor() {
-  const [mounted, setMounted] = useState(false);
-  const [content, setContent] = useState("");
+  const [mounted, setMounted] = useState(false); // ensures client-side render
+  const [content, setContent] = useState<string>("");
 
-  // Only render ReactQuill after client mount
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  if (!mounted) return null;
+  // Save content to Supabase (example)
+  const saveArticle = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("articles") // make sure you have an "articles" table
+        .insert([{ content }]);
+
+      if (error) {
+        console.error("Error saving article:", error.message);
+      } else {
+        console.log("Article saved:", data);
+      }
+    } catch (err) {
+      console.error("Unexpected error:", err);
+    }
+  };
+
+  if (!mounted) return null; // prevent SSR rendering issues
 
   return (
-    <div className="bg-white p-4 rounded shadow">
+    <div className="my-4">
       <ReactQuill
         theme="snow"
         value={content}
         onChange={setContent}
-        placeholder="Write your article here..."
+        style={{ minHeight: "300px" }}
       />
+
+      <button
+        onClick={saveArticle}
+        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+      >
+        Save Article
+      </button>
     </div>
   );
 }
