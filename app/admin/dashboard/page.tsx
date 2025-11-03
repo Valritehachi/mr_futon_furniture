@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabaseClient";
+import { supabase } from "@/utils/supabaseClient";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 
-const ArticleEditor = dynamic(() => import("../../../components/ArticleEditor"), { ssr: false });
+const ArticleEditor = dynamic(() => import("../../components/ArticleEditor"), { ssr: false });
 
-export default function AdminDashboard(): JSX.Element {
+export default function AdminDashboard(): JSX.Element | null {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<any>(null);
