@@ -11,6 +11,17 @@ interface Article {
   created_at?: string;
 }
 
+const categories = [
+  "Achievers & Trailblazers",
+  'Beneficiaries of James "Dick" Richards Trust',
+  "Bosa Philanthropy",
+  "History",
+  "Newsletter",
+  "Support Opportunities",
+  "The Jamaican Proverbs",
+  "Uncategorized",
+];
+
 export default function ArticlesEditor() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [title, setTitle] = useState("");
@@ -18,6 +29,8 @@ export default function ArticlesEditor() {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
+  const [category, setCategory] = useState<string>("");
+
 
   // Fetch articles
   const fetchArticles = async () => {
@@ -65,13 +78,13 @@ export default function ArticlesEditor() {
     if (editingId) {
       const { error } = await supabase
         .from("articles")
-        .update({ title, content, ...(imageUrl && { image_url: imageUrl }) })
+        .update({ title, content, category, ...(imageUrl && { image_url: imageUrl }) })
         .eq("id", editingId);
       if (error) console.error(error);
     } else {
       const { error } = await supabase
         .from("articles")
-        .insert([{ title, content, ...(imageUrl && { image_url: imageUrl }) }]);
+        .insert([{ title, content, category, ...(imageUrl && { image_url: imageUrl }) }]);
       if (error) console.error(error);
     }
 
@@ -151,6 +164,23 @@ export default function ArticlesEditor() {
                   className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all text-lg"
                 />
               </div>
+              
+
+              {/* Select Category */}
+              <label className="block mb-2 font-semibold">Category</label>
+              <select
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="block w-full border border-gray-300 p-2 rounded-md focus:ring focus:ring-blue-200"
+              >
+                <option value="">Select a category</option>
+                {categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+
 
               {/* Image Upload */}
               <div>

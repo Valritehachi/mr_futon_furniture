@@ -4,18 +4,21 @@ import { use, useEffect, useState } from "react";
 import Header from "@/app/components/Header";
 import Navbar from "@/app/components/Navbar";
 import { supabase } from "@/utils/supabaseClient";
+import Link from "next/link";
+import Image from "next/image";
 
 interface Post {
   id: number;
   title: string;
   content: string;
   created_at?: string;
+  image_url?: string;
 }
 
 export default function NewsletterDetailPage({ params }: { params: Promise<{ id: string }> }) {
   // Unwrap the params Promise
   const { id } = use(params);
-  
+
   const [post, setPost] = useState<Post | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -23,7 +26,7 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
   useEffect(() => {
     const fetchArticle = async () => {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from("articles")
         .select("*")
@@ -36,7 +39,7 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
       } else {
         setPost(data as Post);
       }
-      
+
       setLoading(false);
     };
 
@@ -55,6 +58,15 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
           <p className="text-center text-red-500">{error}</p>
         ) : post ? (
           <article className="max-w-3xl mx-auto bg-white p-8 rounded-lg shadow">
+            {post.image_url && (
+              <div className="mb-6">
+                <img
+                  src={post.image_url}
+                  alt={post.title}
+                  className="w-full h-auto rounded-lg object-contain"
+                />
+              </div>
+            )}
             <h1 className="text-4xl font-bold mb-4 text-blue-600">
               {post.title}
             </h1>
