@@ -7,6 +7,7 @@ interface Article {
   id: number;
   title: string;
   content: string;
+  image_url?: string;
   created_at?: string;
 }
 
@@ -14,6 +15,7 @@ export default function ArticlesEditor() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,19 +42,42 @@ export default function ArticlesEditor() {
 
     setLoading(true);
 
+    let imageUrl: string | undefined = undefined;
+
+    // Upload image if selected
+    if (imageFile) {
+      const fileName = `${Date.now()}_${imageFile.name}`;
+      const { error: uploadError } = await supabase.storage
+        .from("article_images") // correct bucket name
+        .upload(`public/${fileName}`, imageFile);
+
+      if (uploadError) {
+        console.error(uploadError);
+        alert(`Failed to upload image: ${uploadError.message}`);
+      } else {
+        const { data } = supabase.storage
+          .from("article_images")
+          .getPublicUrl(`public/${fileName}`);
+        imageUrl = data.publicUrl; // store the public URL
+      }
+    }
+
     if (editingId) {
       const { error } = await supabase
         .from("articles")
-        .update({ title, content })
+        .update({ title, content, ...(imageUrl && { image_url: imageUrl }) })
         .eq("id", editingId);
       if (error) console.error(error);
     } else {
-      const { error } = await supabase.from("articles").insert([{ title, content }]);
+      const { error } = await supabase
+        .from("articles")
+        .insert([{ title, content, ...(imageUrl && { image_url: imageUrl }) }]);
       if (error) console.error(error);
     }
 
     setTitle("");
     setContent("");
+    setImageFile(null);
     setEditingId(null);
     setLoading(false);
     fetchArticles();
@@ -61,7 +86,6 @@ export default function ArticlesEditor() {
   // Delete article
   const deleteArticle = async (id: number) => {
     if (!confirm("Are you sure you want to delete this article?")) return;
-    
     const { error } = await supabase.from("articles").delete().eq("id", id);
     if (error) console.error(error);
     fetchArticles();
@@ -72,6 +96,7 @@ export default function ArticlesEditor() {
     setEditingId(article.id);
     setTitle(article.title);
     setContent(article.content);
+    setImageFile(null);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -80,14 +105,14 @@ export default function ArticlesEditor() {
     setEditingId(null);
     setTitle("");
     setContent("");
+    setImageFile(null);
   };
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
       <div className="max-w-7xl mx-auto flex gap-6">
-        {/* Left Column - Main Editor (3/4 width) */}
+        {/* Left Column - Main Editor */}
         <div className="flex-1 space-y-6">
-          {/* Editor Card */}
           <div className="bg-white rounded-xl shadow-lg p-8">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-3xl font-bold text-gray-800 flex items-center gap-2">
@@ -127,6 +152,23 @@ export default function ArticlesEditor() {
                 />
               </div>
 
+              {/* Image Upload */}
+              <div>
+                <label className="block text-sm font-bold text-gray-700 mb-2">
+                  🖼️ Article Image (Optional)
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setImageFile(e.target.files[0]);
+                    }
+                  }}
+                  className="w-full text-gray-700 border-2 border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+              </div>
+
               {/* Content Textarea */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
@@ -148,7 +190,11 @@ export default function ArticlesEditor() {
                   disabled={loading}
                   className="bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white px-8 py-4 rounded-xl font-bold transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 text-lg"
                 >
-                  {loading ? "⏳ Saving..." : editingId ? "💾 Update Article" : "🚀 Publish Article"}
+                  {loading
+                    ? "⏳ Saving..."
+                    : editingId
+                    ? "💾 Update Article"
+                    : "🚀 Publish Article"}
                 </button>
 
                 {editingId && (
@@ -164,7 +210,7 @@ export default function ArticlesEditor() {
           </div>
         </div>
 
-        {/* Right Column - Articles List (1/4 width) */}
+        {/* Right Column - Articles List */}
         <div className="w-80 flex-shrink-0">
           <div className="bg-white rounded-xl shadow-lg p-5 sticky top-8 max-h-[calc(100vh-4rem)] overflow-hidden flex flex-col">
             <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-gray-100">
@@ -199,21 +245,30 @@ export default function ArticlesEditor() {
                     >
                       {article.title}
                     </h4>
-                    
+
+                    {article.image_url && (
+                      <img
+                        src={article.image_url}
+                        alt={article.title}
+                        className="mb-2 w-full h-28 object-cover rounded-lg"
+                      />
+                    )}
+
                     <p className="text-xs text-gray-500 line-clamp-2 mb-3">
                       {article.content}
                     </p>
 
                     {article.created_at && (
                       <p className="text-xs text-gray-400 mb-3 flex items-center gap-1">
-                        📅 {new Date(article.created_at).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          year: 'numeric'
+                        📅{" "}
+                        {new Date(article.created_at).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
                         })}
                       </p>
                     )}
-                    
+
                     <div className="flex gap-2">
                       <button
                         onClick={() => editArticle(article)}
