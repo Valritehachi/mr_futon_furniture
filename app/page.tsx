@@ -21,6 +21,7 @@ export default function Home() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [limit, setLimit] = useState(8); // initial number of posts
   const [hasMore, setHasMore] = useState(true);
+  const [commentsRefreshTrigger, setCommentsRefreshTrigger] = useState(0);
 
   // Fetch posts from Supabase
   const fetchArticles = async (currentLimit: number) => {
@@ -122,7 +123,9 @@ export default function Home() {
           </section>
 
           {/* Right Sidebar */}
-          <Sidebar />
+          {/* <Sidebar /> */}
+          <Sidebar refreshCommentsTrigger={commentsRefreshTrigger} />
+
         </div>
       </div>
     </main>

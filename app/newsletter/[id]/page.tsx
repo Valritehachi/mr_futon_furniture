@@ -31,11 +31,12 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
 
   const [post, setPost] = useState<Post | null>(null);
   const [comments, setComments] = useState<Comment[]>([]);
-  const [commentsRefreshTrigger, setCommentsRefreshTrigger] = useState(0);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [commentsRefreshTrigger, setCommentsRefreshTrigger] = useState(0);
 
-  // Fetch article and comments on page load
+  // Fetch article and comments
   useEffect(() => {
     const fetchArticleAndComments = async () => {
       setLoading(true);
@@ -71,7 +72,12 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
     };
 
     fetchArticleAndComments();
-  }, [id]);
+  }, [id, refreshTrigger]);
+
+  const handleCommentSubmitted = () => {
+    setRefreshTrigger((prev) => prev + 1);
+  };
+
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -111,13 +117,12 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
               </p>
             </div>
 
+           
             {/* Comment Form */}
-            <CommentForm
-              articleId={Number(id)}
-              onCommentSubmitted={() =>
-                setCommentsRefreshTrigger((prev) => prev + 1)
-              }
-            />
+              <CommentForm
+                articleId={Number(id)}
+                onCommentSubmitted={() => setCommentsRefreshTrigger(prev => prev + 1)}
+              />
           </article>
         ) : (
           <p className="text-center text-gray-500">Newsletter not found</p>
