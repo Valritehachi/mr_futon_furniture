@@ -124,6 +124,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ articleId }) => {
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
             ref={recaptchaRef}
         />
+        console.log("RECAPTCHA SITE KEY (client):", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
 
         <button
           type="submit"
