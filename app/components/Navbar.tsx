@@ -43,7 +43,7 @@ export default function Navbar() {
           </li>
 
           <li>
-            <Link href="/" className="hover:underline">
+            <Link href="/contact_us" className="hover:underline">
               Contact Us
             </Link>
           </li>
