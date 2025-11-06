@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 
 
-
+console.log("Client RECAPTCHA SITE KEY:", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
 interface Comment {
   id: number;
   name: string;
@@ -124,7 +124,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ articleId }) => {
             sitekey={process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!}
             ref={recaptchaRef}
         />
-        console.log("RECAPTCHA SITE KEY (client):", process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY);
 
         <button
           type="submit"
