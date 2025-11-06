@@ -73,7 +73,7 @@ const CommentForm: React.FC<CommentFormProps> = ({ articleId }) => {
 
 
     try {
-      const res = await fetch("/api/submit-comment", {
+      const res = await fetch("/api/submit_comment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ articleId, name, comment, token }),
