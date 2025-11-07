@@ -3,9 +3,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+
+
 
 interface Article {
   id: number;
@@ -265,14 +268,6 @@ export default function ArticlesEditor() {
                 <label className="block text-sm font-bold text-gray-700 mb-2">
                   📄 Content
                 </label>
-                {/* <textarea
-                  placeholder="Write your article content here..."
-                  value={content}
-                  onChange={(e) => setContent(e.target.value)}
-                  rows={14}
-                  className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all resize-none text-base leading-relaxed"
-                /> */}
-
                 <ReactQuill value={content} onChange={setContent} modules={modules} />
               </div>
 
