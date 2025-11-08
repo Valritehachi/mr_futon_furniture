@@ -156,7 +156,7 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
                 </span>{" "}
                 <span className="text-gray-600 italic text-xs">on</span>{" "}
                 <span className="text-blue-600 italic text-xs hover:font-bold hover:underline transition-all">
-                  {comment.articles?.title || "Unknown Article"}
+                  {comment.articles?.[0]?.title || "Unknown Article"}
                 </span>
                 <p className="text-gray-500 italic text-xs mt-1">
                   "{truncateComment(comment.comment)}"
