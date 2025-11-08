@@ -18,7 +18,7 @@ interface Comment {
   comment: string;
   created_at: string;
   article_id: number;
-  articles: { title: string }[];
+  articles?: { title: string }[] | { title: string }; // Accept both array and single object
 }
 
 interface Archive {
@@ -31,8 +31,6 @@ interface Archive {
 interface SidebarProps {
   refreshCommentsTrigger?: number;
 }
-
-
 
 const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
   const [recentPosts, setRecentPosts] = useState<Article[]>([]);
@@ -63,23 +61,21 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
       // Fetch recent comments with article titles
       const { data: comments, error: commentsError } = await supabase
         .from("comments")
-        .select(
-          `
-            id,
-            author_name,
-            comment,
-            created_at,
-            article_id,
-            articles(title)
-          `
-        )
+        .select(`
+          id,
+          author_name,
+          comment,
+          created_at,
+          article_id,
+          articles (title)
+        `)
         .order("created_at", { ascending: false })
         .limit(5);
 
-      if (!commentsError && comments) setRecentComments(comments);
+      if (!commentsError && comments) {
+        setRecentComments(comments as Comment[]);
+      }
       setCommentsLoading(false);
-
-     
 
       // Fetch all articles to generate archives
       const { data: allPosts, error: archivesError } = await supabase
@@ -110,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
     
     fetchData();
   }, [refreshCommentsTrigger]);
-
+  console.log(JSON.stringify(recentComments, null, 2));
   return (
     <aside className="w-1/4 h-full self-start bg-gray-100 rounded-2xl p-6 shadow-md h-[calc(100vh-200px)] overflow-y-auto">
       <Searchbar />
@@ -156,7 +152,9 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
                 </span>{" "}
                 <span className="text-gray-600 italic text-xs">on</span>{" "}
                 <span className="text-blue-600 italic text-xs hover:font-bold hover:underline transition-all">
-                  {comment.articles?.[0]?.title || "Unknown Article"}
+                  {Array.isArray(comment.articles) 
+                    ? comment.articles[0]?.title 
+                    : comment.articles?.title || "Unknown Article"}
                 </span>
                 <p className="text-gray-500 italic text-xs mt-1">
                   "{truncateComment(comment.comment)}"
