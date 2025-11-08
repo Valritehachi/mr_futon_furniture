@@ -70,7 +70,7 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
             comment,
             created_at,
             article_id,
-            articles!inner(title)
+            articles(title)
           `
         )
         .order("created_at", { ascending: false })
