@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { supabase } from "@/utils/supabaseClient";
 import Searchbar from "./SearchBar";
-import error from "next/error";
 
 interface Article {
   id: number;
@@ -26,7 +25,6 @@ interface Archive {
   year: number;
   count: number;
 }
-
 
 interface SidebarProps {
   refreshCommentsTrigger?: number;
@@ -53,12 +51,16 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
         .select("id, title, created_at")
         .order("published_at", { ascending: false })
         .limit(5);
-      if (!postsError && posts) setRecentPosts(posts);
-
-
       
+      if (postsError) {
+        console.error("❌ Error fetching posts:", postsError);
+      } else {
+        console.log("✅ Recent posts fetched:", posts);
+        setRecentPosts(posts);
+      }
 
       // Fetch recent comments with article titles
+      console.log("🔍 Fetching recent comments...");
       const { data: comments, error: commentsError } = await supabase
         .from("comments")
         .select(`
@@ -67,12 +69,16 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
           comment,
           created_at,
           article_id,
-          articles (title)
+          articles!comments_article_id_fkey (title)
         `)
         .order("created_at", { ascending: false })
         .limit(5);
-
-      if (!commentsError && comments) {
+      
+      if (commentsError) {
+        console.error("❌ Error fetching comments:", commentsError);
+        console.error("Error details:", JSON.stringify(commentsError, null, 2));
+      } else {
+        console.log("✅ Recent comments fetched:", comments);
         setRecentComments(comments as Comment[]);
       }
       setCommentsLoading(false);
@@ -83,6 +89,7 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
         .select("published_at")
         .order("published_at", { ascending: false })
         .limit(100);
+      
       if (!archivesError && allPosts) {
         const archiveMap = new Map<string, number>();
         allPosts.forEach((post) => {
@@ -103,12 +110,13 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
 
       setLoading(false);
     };
-    
+
     fetchData();
   }, [refreshCommentsTrigger]);
-  console.log(JSON.stringify(recentComments, null, 2));
+
   return (
-    <aside className="w-1/4 h-full self-start bg-gray-100 rounded-2xl p-6 shadow-md h-[calc(100vh-200px)] overflow-y-auto">
+
+    <div className="h-full self-start bg-gray-100 rounded-2xl p-6 shadow-md overflow-y-auto">
       <Searchbar />
 
       {/* Recent Posts */}
@@ -132,25 +140,21 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
         )}
       </ul>
 
+      {/* Recent Comments */}
       <h3 className="italic text-base font-semibold mb-4">Recent Comments</h3>
-      
       <ul className="arrow-bullet mb-6 space-y-2 text-gray-700">
         {commentsLoading ? (
           <li className="text-gray-500 italic text-xs">Loading...</li>
         ) : recentComments.length === 0 ? (
           <li className="text-gray-500 italic text-xs">No comments yet</li>
         ) : (
-          
           recentComments.map((comment) => (
             <li key={comment.id}>
-              <Link
-                href={`/newsletter/${comment.article_id}`}
-                className="block"
-              >
+              <Link href={`/newsletter/${comment.article_id}`} className="block">
                 <span className="text-blue-600 italic text-xs hover:font-bold hover:underline transition-all">
                   {comment.author_name}
-                </span>{" "}
-                <span className="text-gray-600 italic text-xs">on</span>{" "}
+                </span>
+                <span className="text-gray-600 italic text-xs"> on </span>
                 <span className="text-blue-600 italic text-xs hover:font-bold hover:underline transition-all">
                   {Array.isArray(comment.articles) 
                     ? comment.articles[0]?.title 
@@ -292,7 +296,7 @@ const Sidebar: React.FC<SidebarProps> = ({ refreshCommentsTrigger }) => {
           </Link>
         </li>
       </ul>
-    </aside>
+    </div>
   );
 };
 
