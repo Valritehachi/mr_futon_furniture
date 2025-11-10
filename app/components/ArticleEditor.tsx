@@ -7,9 +7,6 @@ import "react-quill-new/dist/quill.snow.css";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-
-
-
 interface Article {
   id: number;
   title: string;
@@ -173,7 +170,7 @@ export default function ArticlesEditor() {
 
   return (
     <div className="bg-gray-100 min-h-screen p-8">
-      <div className="max-w-7xl mx-auto flex gap-6">
+      <div className=" flex flex-col lg:flex-row gap-6">
         {/* Left Column - Main Editor */}
         <div className="flex-1 space-y-6">
           <div className="bg-white rounded-xl shadow-lg p-8">
@@ -299,7 +296,7 @@ export default function ArticlesEditor() {
         </div>
 
         {/* Right Column - Articles List */}
-        <div className="w-80 flex-shrink-0">
+        <div className="w-full lg:w-80 flex-shrink-0">
           <div className="bg-white rounded-xl shadow-lg p-5 sticky top-8 max-h-[calc(100vh-4rem)] overflow-hidden flex flex-col">
             <div className="flex items-center justify-between mb-4 pb-4 border-b-2 border-gray-100">
               <h3 className="text-xl font-bold text-gray-800 flex items-center gap-2">
