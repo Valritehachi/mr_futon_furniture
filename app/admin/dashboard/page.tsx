@@ -35,9 +35,9 @@ export default function DashboardPage() {
       {/* Beautiful Header with Gradient */}
       <div className="bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 text-white shadow-2xl">
         <div className="max-w-7xl mx-auto px-8 py-10">
-          <div className="flex items-center justify-between">
-            {/* Left Side - Welcome Message */}
-            <div className="flex-1">
+          <div className="flex flex-col lg:flex-row items-start justify-between gap-6">
+          {/* Left Side - Welcome Message */}
+          <div className="flex-1 w-full lg:w-auto">
               <div className="flex items-center gap-3 mb-3">
                 <div className="bg-white/20 backdrop-blur-sm p-3 rounded-2xl">
                   <span className="text-4xl">👋</span>
@@ -59,7 +59,7 @@ export default function DashboardPage() {
             </div>
 
             {/* Right Side - Stats Cards */}
-            <div className="flex gap-4">
+            <div className="flex gap-4 w-full lg:w-auto">
               <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 min-w-[160px] shadow-xl">
                 <div className="text-center">
                   <div className="text-3xl mb-2">📰</div>
@@ -94,3 +94,6 @@ export default function DashboardPage() {
     </div>
   );
 }
+
+
+
