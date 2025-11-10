@@ -69,18 +69,18 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Main content + Sidebar */}
       <div className="flex justify-center mt-4 lg:mt-8 px-4 lg:px-0">
-        {/* Keep same width container as hero */}
+        {/* Stack vertically on mobile, side-by-side on desktop */}
         <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-4 lg:gap-8">
-          
-          {/* Left main content (¾ width on desktop) */}
-          <section className="w-full lg:w-3/4 p-4 lg:p-8 bg-gray-50 rounded-lg">
+                
+          {/* Left main content (full width mobile, ¾ width desktop) */}
+          <section className="w-full lg:w-3/4 p-4 lg:p-6 bg-gray-50 rounded-lg">
             <h1 className="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center text-blue-600">
               Latest Newsletters
             </h1>
 
             <div className="space-y-6 lg:space-y-8 max-w-4xl mx-auto">
+              {/* Your content */}
               {posts.length === 0 ? (
                 <p className="text-center text-gray-500">No newsletters yet.</p>
               ) : (
@@ -122,8 +122,8 @@ export default function Home() {
             />
           </section>
 
-          {/* Right Sidebar (¼ width on desktop) */}
-          <aside className="hidden lg:block w-full lg:w-1/4">
+          {/* Right Sidebar (full width mobile, ¼ width desktop) */}
+          <aside className="w-full lg:w-1/4 bg-gray-100 rounded-2xl p-4 lg:p-6">
             <Sidebar refreshCommentsTrigger={commentsRefreshTrigger} />
           </aside>
         </div>
