@@ -30,6 +30,15 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+.prose img {
+  width: 50%;           /* slightly smaller than full width */
+  height: auto;
+  display: block;        /* centers nicely */
+  margin: 1.5rem auto;   /* center horizontally + spacing */
+  border-radius: 0.5rem; /* optional rounded corners */
+  object-fit: contain;
+}
+
 .arrow-bullet li::before {
   content: '➤';           /* bold short arrow */
   color: #2563EB;          /* Tailwind blue-600 */

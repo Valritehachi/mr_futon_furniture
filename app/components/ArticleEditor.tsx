@@ -34,6 +34,8 @@ export default function ArticlesEditor() {
   const [content, setContent] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
+  const [removeImage, setRemoveImage] = useState(false);
   const [loading, setLoading] = useState(false);
   const [category, setCategory] = useState<string>("");
   const [publishedAt, setPublishedAt] = useState<string>("");
@@ -59,19 +61,57 @@ export default function ArticlesEditor() {
     }
   };
 
-
   const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, false] }],
-      ["bold", "italic", "underline", "strike"],
-      [{ align: [] }],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link", "image"],
-      ["clean"],
-    ],
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, false] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ align: [] }],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "image"],
+        ["clean"],
+      ],
+      handlers: {},
+    },
+    clipboard: {
+      matchVisual: false,
+    },
   };
 
+  useEffect(() => {
+    const toolbar = document.querySelector(".ql-toolbar");
+    if (!toolbar) return;
 
+    const buttons: { [key: string]: string } = {
+      bold: "Bold",
+      italic: "Italic",
+      underline: "Underline",
+      strike: "Strike",
+      link: "Insert Link",
+      image: "Insert Image",
+      clean: "Remove Formatting",
+      "list-ordered": "Ordered List",
+      "list-bullet": "Bullet List",
+      "align-left": "Align Left",
+      "align-center": "Align Center",
+      "align-right": "Align Right",
+      "align-justify": "Justify",
+      header: "Header",
+    };
+
+    toolbar.querySelectorAll("button, select").forEach((el) => {
+      const format = el.className.replace("ql-", "");
+      if (buttons[format]) {
+        el.setAttribute("title", buttons[format]);
+      }
+    });
+  }, []);
+
+  const handleRemoveImage = () => {
+    setRemoveImage(true);
+    setImageFile(null);
+    setCurrentImageUrl(null);
+  };
 
   useEffect(() => {
     fetchArticles();
@@ -107,39 +147,40 @@ export default function ArticlesEditor() {
     }
 
     if (editingId) {
-      const { error } = await supabase
-        .from("articles")
-        .update({
+    const { error } = await supabase
+      .from("articles")
+      .update({
+        title,
+        content,
+        category,
+        published_at: publishedDate,
+        image_url: removeImage ? null : imageUrl ?? currentImageUrl ?? null, // <-- always include, null clears
+      })
+      .eq("id", editingId);
+    if (error) console.error(error);
+  } else {
+    const { error } = await supabase
+      .from("articles")
+      .insert([
+        {
           title,
           content,
           category,
           published_at: publishedDate,
-          ...(imageUrl && { image_url: imageUrl }),
-        })
-        .eq("id", editingId);
-      if (error) console.error(error);
-    } else {
-      const { error } = await supabase
-        .from("articles")
-        .insert([
-          {
-            title,
-            content,
-            category,
-            published_at: publishedDate,
-            ...(imageUrl && { image_url: imageUrl }),
-          },
-        ]);
-      if (error) console.error(error);
-    }
+          image_url: imageUrl || null, // <-- always include
+        },
+      ]);
+    if (error) console.error(error);
+  }
 
-    setTitle("");
-    setContent("");
-    setImageFile(null);
-    setEditingId(null);
-    setLoading(false);
-    fetchArticles();
-  };
+  setTitle("");
+  setContent("");
+  setImageFile(null);
+  setEditingId(null);
+  setLoading(false);
+  fetchArticles();
+};
+
 
   // Delete article
   const deleteArticle = async (id: number) => {
@@ -151,14 +192,16 @@ export default function ArticlesEditor() {
 
   // Edit article
   const editArticle = (article: Article) => {
-  setEditingId(article.id);
-  setTitle(article.title);
-  setContent(article.content);
-  setCategory(article.category || "");
-  setPublishedAt(article.published_at ? article.published_at.split("T")[0] : "");
-  setImageFile(null);
-  window.scrollTo({ top: 0, behavior: "smooth" });
-};
+    setEditingId(article.id);
+    setTitle(article.title);
+    setContent(article.content);
+    setCategory(article.category || "");
+    setPublishedAt(article.published_at ? article.published_at.split("T")[0] : "");
+    setCurrentImageUrl(article.image_url || null);
+    setImageFile(null);
+    setRemoveImage(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   // Cancel editing
   const cancelEdit = () => {
@@ -166,6 +209,8 @@ export default function ArticlesEditor() {
     setTitle("");
     setContent("");
     setImageFile(null);
+    setCurrentImageUrl(null);
+    setRemoveImage(false);
   };
 
   return (
@@ -242,30 +287,105 @@ export default function ArticlesEditor() {
                 ))}
               </select>
 
-
               {/* Image Upload */}
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
                   🖼️ Article Image (Optional)
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={(e) => {
-                    if (e.target.files && e.target.files[0]) {
-                      setImageFile(e.target.files[0]);
-                    }
-                  }}
-                  className="w-full text-gray-700 border-2 border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
-                />
+
+                {/* If there’s an existing image (when editing) */}
+                {currentImageUrl && !removeImage && (
+                  <div className="mt-2 flex items-center gap-3">
+                    <img
+                      src={currentImageUrl}
+                      alt="Current article"
+                      className="w-24 h-24 object-cover rounded-lg border"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setRemoveImage(true);
+                        setCurrentImageUrl(null);
+                      }}
+                      className="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                )}
+
+                {/* File input for new upload (only show if there’s no current image or it’s removed) */}
+                {(!currentImageUrl || removeImage) && (
+                  <div className="mt-2">
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={(e) => {
+                        if (e.target.files && e.target.files[0]) {
+                          setImageFile(e.target.files[0]);
+                          setRemoveImage(false);
+                        }
+                      }}
+                      className="w-full text-gray-700 border-2 border-gray-200 rounded-xl px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    />
+                    {imageFile && (
+                      <div className="mt-3 flex items-center gap-3">
+                        <img
+                          src={URL.createObjectURL(imageFile)}
+                          alt="Preview"
+                          className="w-24 h-24 object-cover rounded-lg border"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setImageFile(null)}
+                          className="px-3 py-1 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Content Textarea */}
+              
               <div>
                 <label className="block text-sm font-bold text-gray-700 mb-2">
                   📄 Content
                 </label>
-                <ReactQuill value={content} onChange={setContent} modules={modules} />
+
+                {/* Custom toolbar */}
+                <div id="toolbar" className="ql-toolbar ql-snow">
+                  <select className="ql-header" title="Header">
+                    <option value="1">H1</option>
+                    <option value="2">H2</option>
+                    <option value="3">H3</option>
+                     <option value="">Normal</option> 
+                  </select>
+                  <button className="ql-bold" title="Bold"></button>
+                  <button className="ql-italic" title="Italic"></button>
+                  <button className="ql-underline" title="Underline"></button>
+                  <button className="ql-strike" title="Strike"></button>
+                  <select className="ql-align" title="Align">
+                    <option value=""></option>
+                    <option value="center"></option>
+                    <option value="right"></option>
+                    <option value="justify"></option>
+                  </select>
+                  <button className="ql-list" value="ordered" title="Ordered List"></button>
+                  <button className="ql-list" value="bullet" title="Bullet List"></button>
+                  <button className="ql-link" title="Insert Link"></button>
+                  <button className="ql-image" title="Insert Image"></button>
+                  <button className="ql-clean" title="Remove Formatting"></button>
+                </div>
+
+                {/* ReactQuill with custom toolbar */}
+                <ReactQuill
+                  value={content}
+                  onChange={setContent}
+                  modules={{ ...modules, toolbar: "#toolbar" }}
+                />
               </div>
 
               {/* Action Buttons */}
@@ -339,9 +459,10 @@ export default function ArticlesEditor() {
                       />
                     )}
 
-                    <p className="text-xs text-gray-500 line-clamp-2 mb-3">
-                      {article.content}
-                    </p>
+                    <p
+                      className="text-xs text-gray-500 line-clamp-2 mb-3"
+                      dangerouslySetInnerHTML={{ __html: article.content }}
+                    ></p>
 
                     {article.created_at && (
                       <p className="text-xs text-gray-400 mb-3 flex items-center gap-1">

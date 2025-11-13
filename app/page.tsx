@@ -105,9 +105,10 @@ export default function Home() {
                           🗓️ {new Date(n.published_at).toLocaleDateString()}
                         </p>
                       )}
-                      <p className="text-gray-700 mb-4 text-sm lg:text-base">
-                        {n.content.substring(0, 150)}...
-                      </p>
+                      <div
+                        className="text-gray-700 mb-4 text-sm lg:text-base prose max-w-none"
+                        dangerouslySetInnerHTML={{ __html: n.content.substring(0, 300) + "..." }}
+                      ></div>
                       <ReadMoreButton id={n.id} />
                     </div>
                   </div>
