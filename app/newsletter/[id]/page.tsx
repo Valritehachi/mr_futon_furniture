@@ -109,11 +109,14 @@ export default function NewsletterDetailPage({ params }: { params: Promise<{ id:
                 {new Date(post.published_at).toLocaleDateString()}
               </p>
             )}
-
+            {/* 
             <div
               className="prose max-w-none text-gray-800 text-lg leading-relaxed"
               dangerouslySetInnerHTML={{ __html: post.content }}
-            ></div>
+            ></div> */}
+
+
+            <div className="article-content" dangerouslySetInnerHTML={{ __html: post.content }} />
 
             {/* Comment Form */}
               <CommentForm

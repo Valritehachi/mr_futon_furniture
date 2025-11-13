@@ -46,3 +46,34 @@ body {
   font-size: 0.60rem;      /* slightly bigger */
   margin-right: 0.5rem;    /* space between arrow and text */
 }
+
+
+/* Styles for article content */
+.article-content {
+  overflow-x: auto; /* allow horizontal scrolling for wide tables */
+  width: 100%;
+}
+
+.article-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem; /* spacing below table */
+}
+
+.article-content th,
+.article-content td {
+  border: 1px solid #ccc; /* visible borders */
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.article-content th {
+  background-color: #f3f3f3; /* light gray header */
+}
+
+/* Optional: make table responsive */
+.article-content table {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+}
