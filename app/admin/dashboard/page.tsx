@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
-import ArticlesEditor from "@/app/components/ArticleEditor";
+import ArticlesEditor from "@/app/components/ArticlesEditor";
 
 export default function DashboardPage() {
   const [userEmail, setUserEmail] = useState<string>("");
@@ -21,7 +21,7 @@ export default function DashboardPage() {
 
     const getArticleCount = async () => {
       const { count } = await supabase
-        .from("articles")
+        .from("blog")
         .select("*", { count: "exact", head: true });
       setArticleCount(count || 0);
     };
@@ -64,7 +64,7 @@ export default function DashboardPage() {
                 <div className="text-center">
                   <div className="text-3xl mb-2">📰</div>
                   <div className="text-4xl font-bold mb-1">{articleCount}</div>
-                  <div className="text-sm text-blue-100 font-medium">Total Articles</div>
+                  <div className="text-sm text-blue-100 font-medium">Blogs</div>
                 </div>
               </div>
               

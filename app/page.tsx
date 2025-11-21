@@ -1,134 +1,56 @@
-"use client";
+import Layout from './layout';
+import HeroSlider from '@/app/components/HeroSlider';
+import SidebarPromo from '@/app/components/SidebarPromo';
+import Footer from '@/app/components/Footer';
+import Navbar from './components/Navbar';
+import Logo from './components/Logo';
 
-import Header from "./components/Header";
-import Navbar from "./components/Navbar";
-import Image from "next/image";
-import Sidebar from "./components/sidebar";
-import ReadMoreButton from "./components/ReadMoreButton";
-import LoadMoreButton from "./components/LoadMoreButton";
-import { supabase } from "@/utils/supabaseClient";
-import { useEffect, useState } from "react";
-
-interface Post {
-  id: number;
-  title: string;
-  content: string;
-  image_url?: string;
-  published_at?: string;
-}
 
 export default function Home() {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [limit, setLimit] = useState(8);
-  const [hasMore, setHasMore] = useState(true);
-  const [commentsRefreshTrigger, setCommentsRefreshTrigger] = useState(0);
-
-  const fetchArticles = async (currentLimit: number) => {
-    const { data, error, count } = await supabase
-      .from("articles")
-      .select("*", { count: "exact" })
-      .order("published_at", { ascending: false })
-      .limit(currentLimit);
-
-    if (error) {
-      console.error("Error fetching articles:", error);
-      return;
-    }
-
-    setPosts(data as Post[]);
-
-    if (count && currentLimit >= count) {
-      setHasMore(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchArticles(limit);
-  }, [limit]);
-
-  const loadMoreButtonHandler = () => {
-    setLimit((prev) => prev + 8);
-  };
-
   return (
-    <main className="flex flex-col min-h-screen">
-      <Header />
-      <Navbar />
+    <Layout>
+      {/* TOP LEFT: Logo and Navbar */}
+      <div className="flex flex-col gap-2">
+        <Logo />
+        <Navbar />
+      </div>
 
-      {/* Hero image - responsive */}
-      <div className="flex justify-center mt-4 lg:mt-6 px-4 lg:px-0">
-        <div className="w-full max-w-6xl h-[200px] sm:h-[300px] lg:h-[400px]">
-          <Image
-            src="/images/hero.jpg"
-            alt="Hero"
-            width={1000}
-            height={400}
-            className="w-full h-full rounded-2xl shadow-lg object-cover"
-            priority
-          />
+      {/* MAIN CONTENT: Hero + Sidebar */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6">
+        <div className="lg:col-span-8">
+          <HeroSlider />
+        </div>
+
+        <div className="lg:col-span-4 flex flex-col gap-4">
+          <SidebarPromo />
+          <div className="font-bold text-lg ml-[60px]">
+            $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
+          </div>
         </div>
       </div>
 
-      <div className="flex justify-center mt-4 lg:mt-8 px-4 lg:px-0">
-        {/* Stack vertically on mobile, side-by-side on desktop */}
-        <div className="w-full max-w-6xl flex flex-col lg:flex-row gap-4 lg:gap-8">
-                
-          {/* Left main content (full width mobile, ¾ width desktop) */}
-          <section className="w-full lg:w-3/4 p-4 lg:p-6 bg-gray-50 rounded-lg">
-            <h1 className="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center text-blue-600">
-              Latest Newsletters
-            </h1>
-
-            <div className="space-y-6 lg:space-y-8 max-w-4xl mx-auto">
-              {/* Your content */}
-              {posts.length === 0 ? (
-                <p className="text-center text-gray-500">No newsletters yet.</p>
-              ) : (
-                posts.map((n) => (
-                  <div
-                    key={n.id}
-                    className="bg-white border border-gray-200 rounded-lg shadow p-4 lg:p-6 flex flex-col md:flex-row gap-4 lg:gap-6"
-                  >
-                    {n.image_url && (
-                      <div className="w-full md:w-1/3">
-                        <img
-                          src={n.image_url}
-                          alt={n.title}
-                          className="w-full h-48 md:h-80 object-cover rounded-md"
-                        />
-                      </div>
-                    )}
-                    <div className="flex-1">
-                      <h2 className="text-xl lg:text-2xl font-semibold mb-2">{n.title}</h2>
-                      {n.published_at && (
-                        <p className="text-gray-500 text-sm mb-2">
-                          🗓️ {new Date(n.published_at).toLocaleDateString()}
-                        </p>
-                      )}
-                      <div
-                        className="text-gray-700 mb-4 text-sm lg:text-base prose max-w-none"
-                        dangerouslySetInnerHTML={{ __html: n.content.substring(0, 300) + "..." }}
-                      ></div>
-                      <ReadMoreButton id={n.id} />
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            {/* Load More Button */}
-            <LoadMoreButton
-              onClick={loadMoreButtonHandler}
-              hasMore={hasMore}
-            />
-          </section>
-
-          {/* Right Sidebar (full width mobile, ¼ width desktop) */}
-          <aside className="w-full lg:w-1/4 bg-gray-100 rounded-2xl p-4 lg:p-6">
-            <Sidebar refreshCommentsTrigger={commentsRefreshTrigger} />
-          </aside>
+      {/* WELCOME SECTION */}
+      <section className="text-center mt-12">
+        <h1 className="text-3xl text-gray-600 font-bold">
+          Welcome to Mr. Futon Furniture Store
+        </h1>
+        <p className="mt-2 text-gray-500 text-2xl">
+          3300 South Congress Ave, Boynton Beach, FL 33426
+        </p>
+        <div className="mt-3 text-2xl text-gray-500 font-extrabold">
+          (561) 572-3267
         </div>
-      </div>
-    </main>
+        <h1 className="text-4xl text-gray-600 font-bold">
+          All Sofa Sleepers and Futon Mattresses are Made in the USA
+        </h1>
+         <p className="mt-2 text-gray-500 text-2xl">
+          Visit our local showroom in Boynton Beach, Florida
+        </p>
+      </section>
+
+      
+
+      <Footer />
+    </Layout>
   );
 }
