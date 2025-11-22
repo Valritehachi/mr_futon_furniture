@@ -27,6 +27,11 @@ interface Product {
   image_url?: string;
   created_at?: string;
   featured?: boolean;
+  mattress_options?: Array<{ 
+    size: string; 
+    price: string;
+    image_url?: string;
+  }>;
 }
 
 interface Article {
@@ -49,6 +54,17 @@ export default function ArticlesEditor() {
   const [productCategory, setProductCategory] = useState("");
   const [productFeatured, setProductFeatured] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
+
+  const [mattress6Price, setMattress6Price] = useState("");
+  const [mattress8Price, setMattress8Price] = useState("");
+  const [mattress9Price, setMattress9Price] = useState("");
+  const [mattress10Price, setMattress10Price] = useState("");
+
+  const [mattress6Image, setMattress6Image] = useState("");
+  const [mattress8Image, setMattress8Image] = useState("");
+  const [mattress9Image, setMattress9Image] = useState("");
+  const [mattress10Image, setMattress10Image] = useState("");
+
   
   // Blog State
   const [articles, setArticles] = useState<Article[]>([]);
@@ -150,53 +166,21 @@ export default function ArticlesEditor() {
     return data.publicUrl;
     };
 
-  // Save Product
-//   const saveProduct = async () => {
-//     if (!productName.trim() || !productPrice.trim() || !productCategory) {
-//       alert("Please fill in product name, price, and category");
-//       return;
-//     }
 
-//     setLoading(true);
-//     let imageUrl = await uploadImage("images");
 
-//     if (editingProductId) {
-//       const { error } = await supabase
-//         .from("products")
-//         .update({
-//           name: productName,
-//           description: productDescription,
-//           price: productPrice,
-//           category: productCategory,
-//           featured: productFeatured,
-//           image_url: removeImage ? null : imageUrl ?? currentImageUrl ?? null,
-//         })
-//         .eq("id", editingProductId);
-//       if (error) console.error(error);
-//     } else {
-//       const { error } = await supabase
-//         .from("products")
-//         .insert([{
-//           name: productName,
-//           description: productDescription,
-//           price: productPrice,
-//           category: productCategory,
-//           featured: productFeatured,
-//           image_url: imageUrl || null,
-//         }]);
-//       if (error) console.log(error);
-//     }
-
-//     resetProductForm();
-//     setLoading(false);
-//     fetchProducts();
-//   };
-
+    // Save Product
 
     const saveProduct = async () => {
     if (!productName.trim() || !productCategory) {
         alert("Please fill in product name and category");
         return;
+    }
+
+    if (productCategory === "Futon Sets") {
+      if (!mattress6Price || !mattress8Price || !mattress9Price || !mattress10Price) {
+        alert("Please fill in all mattress prices for Futon Sets");
+        return;
+      }
     }
 
     console.log("💾 Starting product save...", {
@@ -211,6 +195,16 @@ export default function ArticlesEditor() {
     setLoading(true);
     let imageUrl = await uploadImage("images");
 
+    // Build mattress options if it's a Futon Set
+    const mattressOptions = productCategory === "Futon Sets" ? [
+      { size: "6 Inch Single Foam", price: mattress6Price, image_url: mattress6Image || null },
+      { size: "8 Inch Double Foam", price: mattress8Price, image_url: mattress8Image || null },
+      { size: "9 Inch Triple Foam", price: mattress9Price, image_url: mattress9Image || null },
+      { size: "10 Inch Double Foam", price: mattress10Price, image_url: mattress10Image || null },
+    ] : null;
+
+    console.log("📸 Image upload result:", imageUrl);
+
     if (editingProductId) {
         console.log("✏️ Updating product ID:", editingProductId);
         const { data, error } = await supabase
@@ -221,6 +215,7 @@ export default function ArticlesEditor() {
             price: productPrice,
             category: productCategory,
             featured: productFeatured,
+            mattress_options: mattressOptions,
             image_url: removeImage ? null : imageUrl ?? currentImageUrl ?? null,
         })
         .eq("id", editingProductId)
@@ -229,10 +224,10 @@ export default function ArticlesEditor() {
         console.log("✅ Update result:", { data, error });
         
         if (error) {
-        console.error("❌ Update error:", error);
-        alert(`Error updating product: ${error.message}`);
-        setLoading(false);
-        return; // Stop execution if error
+          console.error("❌ Update error:", error);
+          alert(`Error updating product: ${error.message}`);
+          setLoading(false);
+          return; // Stop execution if error
         }
     } else {
         console.log("➕ Inserting new product...");
@@ -244,15 +239,16 @@ export default function ArticlesEditor() {
             price: productPrice,
             category: productCategory,
             featured: productFeatured,
+            mattress_options: mattressOptions,
             image_url: imageUrl || null,
         }])
         .select(); // Add .select() to see what was inserted
         
         if (error) {
-        console.error("❌ Insert error:", error);
-        alert(`Error saving product: ${error.message}`);
-        setLoading(false);
-        return; // Stop execution if error
+          console.error("❌ Insert error:", error);
+          alert(`Error saving product: ${error.message}`);
+          setLoading(false);
+          return; // Stop execution if error
         }
         
        
@@ -263,6 +259,7 @@ export default function ArticlesEditor() {
     await fetchProducts(); // Add await to make sure it completes
     console.log("🔄 Products list refreshed");
     };
+
 
   // Save Article
   const saveArticle = async () => {
@@ -329,8 +326,35 @@ export default function ArticlesEditor() {
     setCurrentImageUrl(product.image_url || null);
     setImageFile(null);
     setRemoveImage(false);
+
+    // Load mattress prices if they exist
+  if (product.mattress_options && Array.isArray(product.mattress_options)) {
+    const options = product.mattress_options;
+    setMattress6Price(options.find(o => o.size.includes("6"))?.price || "");
+    setMattress8Price(options.find(o => o.size.includes("8"))?.price || "");
+    setMattress9Price(options.find(o => o.size.includes("9"))?.price || "");
+    setMattress10Price(options.find(o => o.size.includes("10"))?.price || "");
+
+    setMattress6Image(options.find(o => o.size.includes("6"))?.image_url || "");
+    setMattress8Image(options.find(o => o.size.includes("8"))?.image_url || "");
+    setMattress9Image(options.find(o => o.size.includes("9"))?.image_url || "");
+    setMattress10Image(options.find(o => o.size.includes("10"))?.image_url || "");
+  } else {
+    // Clear mattress prices if no options
+    setMattress6Price("");
+    setMattress8Price("");
+    setMattress9Price("");
+    setMattress10Price("");
+    setMattress6Image("");
+    setMattress8Image("");
+    setMattress9Image("");
+    setMattress10Image("");
+  }
+
+
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
+
 
   const editArticle = (article: Article) => {
     setEditingArticleId(article.id);
@@ -355,7 +379,21 @@ export default function ArticlesEditor() {
     setImageFile(null);
     setCurrentImageUrl(null);
     setRemoveImage(false);
+
+    // Reset mattress prices
+    setMattress6Price("");
+    setMattress8Price("");
+    setMattress9Price("");
+    setMattress10Price("");
+
+    setMattress6Image("");
+    setMattress8Image("");
+    setMattress9Image("");
+    setMattress10Image("");
   };
+
+
+
 
   const resetArticleForm = () => {
     setEditingArticleId(null);
@@ -539,6 +577,147 @@ export default function ArticlesEditor() {
                         className="bg-white rounded-xl"
                     />
                   </div>
+
+
+                  {/* ADD THIS ENTIRE SECTION: */}
+                  {productCategory === "Futon Sets" && (
+                  <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                      🛏️ Mattress Pricing Options
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-4">
+                      Enter prices and image URLs for each mattress size.
+                    </p>
+                    
+                    <div className="space-y-6">
+                      {/* 6 Inch */}
+                      <div className="border-b pb-4">
+                        <h4 className="font-semibold text-gray-700 mb-3">6 Inch Single Foam</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Price
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g., $459.00"
+                              value={mattress6Price}
+                              onChange={(e) => setMattress6Price(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Image URL
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="https://..."
+                              value={mattress6Image}
+                              onChange={(e) => setMattress6Image(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 8 Inch */}
+                      <div className="border-b pb-4">
+                        <h4 className="font-semibold text-gray-700 mb-3">8 Inch Double Foam</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Price
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g., $589.00"
+                              value={mattress8Price}
+                              onChange={(e) => setMattress8Price(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Image URL
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="https://..."
+                              value={mattress8Image}
+                              onChange={(e) => setMattress8Image(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 9 Inch */}
+                      <div className="border-b pb-4">
+                        <h4 className="font-semibold text-gray-700 mb-3">9 Inch Triple Foam</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Price
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g., $599.00"
+                              value={mattress9Price}
+                              onChange={(e) => setMattress9Price(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Image URL
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="https://..."
+                              value={mattress9Image}
+                              onChange={(e) => setMattress9Image(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* 10 Inch */}
+                      <div>
+                        <h4 className="font-semibold text-gray-700 mb-3">10 Inch Double Foam</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Price
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="e.g., $699.00"
+                              value={mattress10Price}
+                              onChange={(e) => setMattress10Price(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">
+                              Image URL
+                            </label>
+                            <input
+                              type="text"
+                              placeholder="https://..."
+                              value={mattress10Image}
+                              onChange={(e) => setMattress10Image(e.target.value)}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+
 
                   <div className="flex items-center gap-2">
                     <input

@@ -39,9 +39,16 @@ export default function Navbar() {
               <li>
                 <Link href="/covers" className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12">Covers</Link>
               </li>
-
+              
               <li>
-                <Link href="/space-savers" className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12">Space Savers</Link>
+                <a
+                  href="https://smallsofasleepers.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12"
+                >
+                  Space Savers
+                </a>
               </li>
               
               <li>

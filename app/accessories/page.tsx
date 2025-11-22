@@ -26,6 +26,11 @@ interface Product {
   category: string;
   image_url?: string;
   featured?: boolean;
+  mattress_options?: Array<{ 
+    size: string; 
+    price: string;
+    image_url?: string;
+  }>;
 }
 
 
