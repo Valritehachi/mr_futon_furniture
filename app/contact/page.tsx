@@ -7,8 +7,44 @@ import SidebarPromo from "@/app/components/SidebarPromo";
 import ContactForm from "../components/ContactForm";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
+import { useState } from "react";
+import { useEffect } from "react";
+import { supabase } from "@/utils/supabaseClient";
+
 
 export default function ContactPage() {
+  const [phone, setPhone] = useState<string | null>(null);
+  const [email, setEmail] = useState<string | null>(null);
+  const [hours, setHours] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchSettings = async () => {
+      const { data, error } = await supabase
+        .from("settings")
+        .select("store_phone, store_email, working_hours")
+        .eq("id", 1)
+        .single();
+
+      if (error) {
+        console.error("Failed to fetch settings:", error);
+      } else if (data) {
+        setPhone(data.store_phone);
+        setEmail(data.store_email);
+        let hoursArray: string[] = [];
+        try {
+          hoursArray = JSON.parse(data.working_hours);
+        } catch {
+          // if parsing fails, just put it as single string
+          hoursArray = [data.working_hours];
+        }
+
+        setHours(hoursArray);
+      }
+    };
+
+    fetchSettings();
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <div className="min-h-screen flex flex-col">
@@ -56,16 +92,17 @@ export default function ContactPage() {
               {/* Column 1: Contact */}
               <div className="space-y-2">
                 <h3 className="font-bold text-lg">Mr Futon Furniture</h3>
-                <p>(561) 572-3267</p>
-                <p>FWPProducts@gmail.com</p>
+                <p>{email}</p>
+                <p>{phone}</p>
       
               </div>
               {/* Column 2: Quick Links */}
               <div className="space-y-2">
                 <h3 className="font-bold text-lg">By Appointment Only:</h3>
-                <h3 className="font-bold text-lg">Please call (561) 572-3267:</h3>
-                <p>Monday-Saturday 11:00-5:00</p>
-                <p>Sunday 10:00-1:00</p>
+                <h3 className="font-bold text-lg">Please call {phone}</h3>
+                {hours.map((hour, index) => (
+                  <p key={index}>{hour}</p>
+                ))}
               </div>
             </div>
           </div>

@@ -71,7 +71,7 @@ export default function FutonSetsPage() {
       </div>
 
       {/* Page content */}
-      <section className="flex-grow p-30 bg-gray-50">
+      <section className="flex-grow p-2 md:p-30 bg-gray-50">
         <h1 className="text-4xl font-bold mb-4 text-center text-gray-700">
           Futon Sets
         </h1>
@@ -105,19 +105,21 @@ export default function FutonSetsPage() {
                   className="group block cursor-pointer"
                 >
                   {/* Product Image */}
-                  <div className="aspect-square h-72 sm:h-72 md:h-80 lg:h-64 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-md hover:shadow-xl transition-shadow">
-                    {product.image_url ? (
+                  <div className="w-full mb-4 flex items-center justify-center">
+                  {product.image_url ? (
+                    <div className="w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[16/9]">
                       <img
                         src={product.image_url}
                         alt={product.name}
-                        className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover rounded-lg"
                       />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-6xl">
-                        🛋️
-                      </div>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div className="w-full aspect-[4/3] md:aspect-[16/9] lg:aspect-[16/9] flex items-center justify-center text-gray-400 text-6xl bg-gray-100 rounded-lg">
+                      🛋️
+                    </div>
+                  )}
+                </div>
 
                   {/* Product Name */}
                   <h3 className="text-center text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">

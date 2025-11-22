@@ -44,7 +44,7 @@ interface Article {
 
 export default function ArticlesEditor() {
 
-  const [activeTab, setActiveTab] = useState<"products" | "blog">("blog");
+  const [activeTab, setActiveTab] = useState<"products" | "blog" | "settings">("blog");
   
   // Products State
   const [products, setProducts] = useState<Product[]>([]);
@@ -65,13 +65,18 @@ export default function ArticlesEditor() {
   const [mattress9Image, setMattress9Image] = useState("");
   const [mattress10Image, setMattress10Image] = useState("");
 
+  // SETTINGS STATE
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [hours, setHours] = useState([""]);
+
   
   // Blog State
   const [articles, setArticles] = useState<Article[]>([]);
   const [articleTitle, setArticleTitle] = useState("");
   const [articleContent, setArticleContent] = useState("");
 
-//   const [articleCategory, setArticleCategory] = useState("");
+  //   const [articleCategory, setArticleCategory] = useState("");
   const [editingArticleId, setEditingArticleId] = useState<number | null>(null);
   
   // Shared State
@@ -130,7 +135,17 @@ export default function ArticlesEditor() {
         }
     };
 
-  
+  useEffect(() => {
+    const loadSettings = async () => {
+      const { data } = await supabase.from("settings").select("*").single();
+      if (data) {
+        setEmail(data.store_email || "");
+        setPhone(data.store_phone || "");
+        setHours(data.working_hours || [""]);
+      }
+    };
+    loadSettings();
+  }, []);
 
   useEffect(() => {
     fetchProducts();
@@ -166,7 +181,26 @@ export default function ArticlesEditor() {
     return data.publicUrl;
     };
 
+    // Save Settings
+    const saveSettings = async () => {
+      const { error } = await supabase
+        .from("settings")
+        .update({
+          store_email: email,
+          store_phone: phone,
+          working_hours: hours,
+          updated_at: new Date(),
+        })
+        .eq("id", 1);
 
+      if (error) {
+        alert("Error saving settings");
+      } else {
+        alert("Settings updated successfully!");
+      }
+
+      console.log("⬅️ Raw response:", { error });
+    };
 
     // Save Product
 
@@ -497,6 +531,18 @@ export default function ArticlesEditor() {
         >
           📝 Blog
         </button>
+
+        <button
+          onClick={() => setActiveTab("settings")}
+          className={`px-6 py-3 rounded-lg font-bold transition-all ${
+            activeTab === "settings"
+              ? "bg-blue-600 text-white shadow-lg"
+              : "bg-white text-gray-600 hover:bg-gray-50"
+          }`}
+        >
+          ⚙️ Settings
+        </button>
+
       </div>
 
       
@@ -753,7 +799,8 @@ export default function ArticlesEditor() {
                   </div>
                 </div>
               </>
-            ) : (
+            ) : activeTab === "blog" ? (
+              
               // BLOG EDITOR
               <>
                 <div className="flex items-center justify-between mb-6">
@@ -829,7 +876,66 @@ export default function ArticlesEditor() {
                   </div>
                 </div>
               </>
-            )}
+              ) : activeTab === "settings" ? (
+              // SETTINGS PANEL
+              <div className="bg-white rounded-xl shadow-lg p-8 max-w-xl space-y-6">
+                <div>
+                  <label className="block font-semibold mb-1">Email</label>
+                  <input
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    placeholder="example@email.com"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">Phone Number</label>
+                  <input
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full p-2 border rounded"
+                    placeholder="+1 (555) 000-0000"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold mb-1">
+                    Working Hours (Up to 4)
+                  </label>
+
+                  {hours.map((h, i) => (
+                    <input
+                      key={i}
+                      value={h}
+                      onChange={(e) => {
+                        const newHours = [...hours];
+                        newHours[i] = e.target.value;
+                        setHours(newHours);
+                      }}
+                      className="w-full p-2 border rounded mb-2"
+                      placeholder="Example: Mon–Fri: 9am–6pm"
+                    />
+                  ))}
+
+                  {hours.length < 4 && (
+                    <button
+                      onClick={() => setHours([...hours, ""])}
+                      className="mt-2 text-blue-600"
+                    >
+                      + Add another
+                    </button>
+                  )}
+                </div>
+
+                <button
+                  onClick={saveSettings}
+                  className="bg-blue-600 text-white px-4 py-2 rounded shadow"
+                >
+                  Save Settings
+                </button>
+              </div>
+            ) : null}
           </div>
         </div>
 
@@ -844,8 +950,6 @@ export default function ArticlesEditor() {
                 {activeTab === "products" ? products.length : articles.length}
               </span>
             </div>
-
-
 
 
             {activeTab === "products" ? (
@@ -907,8 +1011,9 @@ export default function ArticlesEditor() {
                 )}
               </div>
             ) : (
-              // ARTICLES LIST
+              
               <div className="space-y-3 overflow-y-auto flex-1">
+                {/* ARTICLES LIST */}
                 {articles.length === 0 ? (
                   <div className="text-center py-12">
                     <div className="text-6xl mb-4">📝</div>
