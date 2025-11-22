@@ -30,7 +30,16 @@ export default function Footer() {
             <li><a href="/futon-sets" className="hover:underline">Futon Sets</a></li>
             <li><a href="/mattresses" className="hover:underline">Mattresses</a></li>
             <li><a href="/covers" className="hover:underline">Covers</a></li>
-            <li><a href="/space-savers" className="hover:underline">Space Savers</a></li>
+            <li>
+                <a
+                  href="https://smallsofasleepers.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12"
+                >
+                  Space Savers
+                </a>
+              </li>
             <li><a href="/accessories" className="hover:underline">Accessories</a></li>
             <li><a href="/blog" className="hover:underline">Blog</a></li>
             <li><a href="/about-us" className="hover:underline">About Us</a></li>

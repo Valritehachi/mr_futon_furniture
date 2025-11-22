@@ -50,38 +50,38 @@ export default function Home() {
 
 
         {/* CATEGORY LINKS GRID */}
-        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 my-20 gap-6 mb-16">
           {/* Sofa Sleepers */}
           
           <li>
             <a
-                    href="https://smallsofasleepers.com/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12"
-                  >
-                    Space Savers
-                  </a>
-            
+              href="https://smallsofasleepers.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
               <div className="aspect-[4/3] relative">
-                <img 
-                  src="/images/sofa-sleepers-category.jpg" 
+                <img
+                  src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/1763761046962_RuckinBlack-FeaturedImage_(1).jpg"
                   alt="Sofa Sleepers"
                   className="w-full h-full object-cover"
                 />
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
                 <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                   <h3 className="text-2xl font-bold mb-2">Shop our Sofa Sleepers</h3>
                   <p className="text-sm">We have high quality sofa sleepers in a wide assortment of styles.</p>
                 </div>
               </div>
+            </a>
           </li>
 
           {/* Futon Mattresses */}
           <Link href="/mattresses" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               <img 
-                src="/images/mattresses-category.jpg" 
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_10-inch-double-foam.png" 
                 alt="Futon Mattresses"
                 className="w-full h-full object-cover"
               />
@@ -97,7 +97,7 @@ export default function Home() {
           <Link href="/covers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               <img 
-                src="/images/covers-category.jpg" 
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/blog_3.jpg" 
                 alt="Futon Covers"
                 className="w-full h-full object-cover"
               />
@@ -113,7 +113,7 @@ export default function Home() {
           <Link href="/space-savers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               <img 
-                src="/images/space-savers-category.jpg" 
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/sofa_sleeper_pink.png" 
                 alt="Space Savers"
                 className="w-full h-full object-cover"
               />
@@ -129,7 +129,7 @@ export default function Home() {
           <Link href="/contact" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               <img 
-                src="/images/showroom-photo.jpg" 
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_showroom.png" 
                 alt="Visit our Showroom"
                 className="w-full h-full object-cover"
               />
@@ -145,7 +145,7 @@ export default function Home() {
           <Link href="/accessories" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               <img 
-                src="/images/accessories-category.jpg" 
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_SlattedCoffeeTable.jpg" 
                 alt="Accessories"
                 className="w-full h-full object-cover"
               />
@@ -165,56 +165,49 @@ export default function Home() {
             <span className="font-bold">Excellent</span> experience from the very start, to now the delivery and set up of this awesome piece of furniture! 
             I didn't think such craftsmanship, pride and service existed any more, but it does with Mark, Mr. Futon!"
           </p>
-          <p className="text-gray-600 font-semibold">— Irena, Google Revi</p>
+          <p className="text-gray-600 font-semibold">— Irena, Google Review</p>
         </div>
 
         {/* ANSWERS TO COMMON QUESTIONS */}
         <div className="max-w-7xl mx-auto mb-16">
-          <h2 className="text-3xl font-bold text-gray-800 mb-8">Answers to Common Futon Questions</h2>
+          <h1 className="text-3xl font-bold underline underline-offset-6 text-underline text-blue-800 mb-8">Answers to Common Futon Questions</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-1 gap-6">
             {/* Article 1 */}
-            <Link href="/blog/advantages-sofa-sleeper" className="group">
+            <Link href="/blog/7" className="group">
               <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all">
-                <div className="aspect-video bg-gradient-to-br from-purple-400 via-pink-400 to-red-400"></div>
+                
+                <img 
+                  src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/1763776546627_Futon-Albany-Arm-Cherry-FeaturedImage.jpg" 
+                  alt="How much should you spend on a futon?"
+                  className="w-70 h-50 object-cover"
+                />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                    Advantages Of The Sofa Sleeper Over The Normal Sofa
+                    How much should you spend on a futon?
                   </h3>
                 </div>
               </div>
             </Link>
 
             {/* Article 2 */}
-            <Link href="/blog/futons-worth-money" className="group">
+            <Link href="/blog/6" className="group">
               <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all">
-                <div className="aspect-video bg-gradient-to-br from-blue-400 via-cyan-400 to-teal-400"></div>
+                <img 
+                  src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/1763762291418_Futon-Fuji-Arm-Dark-Chocolate-FeaturedImage.jpg" 
+                  alt="Are Futons OK for Sleeping On Every Night?"
+                  className="w-70 h-50 object-cover"
+                />
                 <div className="p-6">
                   <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                    Are Futons Worth The Money?
+                    Are Futons OK for Sleeping On Every Night?
                   </h3>
                 </div>
               </div>
             </Link>
 
-            {/* Article 3 */}
-            <Link href="/blog/futon-vs-sleeper-sofa" className="group">
-              <div className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-all">
-                <div className="aspect-video bg-gradient-to-br from-green-400 via-lime-400 to-yellow-400"></div>
-                <div className="p-6">
-                  <h3 className="text-xl font-bold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
-                    Futon vs Sleeper Sofa: Which One is Better?
-                  </h3>
-                </div>
-              </div>
-            </Link>
           </div>
         </div>
-
-
-
-
-
 
 
       </section>
