@@ -64,7 +64,7 @@ export default function FutonSetsPage() {
         {/* Sidebar Promo + Text */}
         <div className="lg:col-span-4 flex flex-col gap-4">
           <SidebarPromo />
-          <div className="font-bold text-lg ml-[60px]">
+          <div className="font-bold text-base md:text-lg text-center lg:text-left lg:ml-[60px]">
             $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
           </div>
         </div>
@@ -97,7 +97,7 @@ export default function FutonSetsPage() {
           </div>
         ) : (
           <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20">
+            <div className="flex flex-col md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 md:gap-10 lg:gap-20">
               {products.map((product) => (
                 <Link
                   href={`/products/${product.id}`}
@@ -105,7 +105,7 @@ export default function FutonSetsPage() {
                   className="group block cursor-pointer"
                 >
                   {/* Product Image */}
-                  <div className="aspect-rectangle h-40 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-md hover:shadow-xl transition-shadow">
+                  <div className="aspect-square h-72 sm:h-72 md:h-80 lg:h-64 bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-md hover:shadow-xl transition-shadow">
                     {product.image_url ? (
                       <img
                         src={product.image_url}

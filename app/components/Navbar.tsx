@@ -5,13 +5,36 @@ import { useState } from "react";
 import Image from "next/image";
 import { useRef } from "react";
 
+
+
+
 export default function Navbar() {
   const [open, setOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   return (
     <header className="border-b">
-      <div className="container mx-auto flex items-center justify-between px-4 py-6 container-max">
+      <div className="container mx-auto flex items-center justify-between px-4 py-4 md:py-6">
+
+
+        {/* Mobile Menu Button */}
+        <button
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="md:hidden p-2 hover:bg-gray-100 rounded"
+        >
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+            {mobileMenuOpen ? (
+              <path d="M6 6L18 18M6 18L18 6" strokeWidth="2" strokeLinecap="round"/>
+            ) : (
+              <>
+                <line x1="3" y1="6" x2="21" y2="6" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="3" y1="12" x2="21" y2="12" strokeWidth="2" strokeLinecap="round"/>
+                <line x1="3" y1="18" x2="21" y2="18" strokeWidth="2" strokeLinecap="round"/>
+              </>
+            )}
+          </svg>
+        </button>
 
         {/* LOGO + NAV ITEMS */}
         <div className="flex items-center gap-4">
@@ -22,8 +45,8 @@ export default function Navbar() {
             </a>
           </Link> */}
 
-          <nav className="hidden md:flex text-xl">
-            <ul className="flex items-center gap-8">
+          <nav className="hidden md:flex text-base lg:text-xl">
+            <ul className="flex items-center gap-4 lg:gap-8">
               <li>
                 <Link href="/" className="hover:underline hover:decoration-[#93C5FD] hover:decoration-2 hover:underline-offset-12">Home</Link>
               </li>
@@ -121,6 +144,49 @@ export default function Navbar() {
           </div>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <nav className="md:hidden border-t bg-white">
+          <ul className="flex flex-col py-4">
+            <li>
+              <Link href="/" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Home</Link>
+            </li>
+            <li>
+              <Link href="/futon-sets" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Futon Sets</Link>
+            </li>
+            <li>
+              <Link href="/mattresses" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Mattresses</Link>
+            </li>
+            <li>
+              <Link href="/covers" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Covers</Link>
+            </li>
+            <li>
+              <a
+                href="https://smallsofasleepers.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block px-4 py-3 hover:bg-gray-100"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Space Savers
+              </a>
+            </li>
+            <li>
+              <Link href="/accessories" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Accessories</Link>
+            </li>
+            <li>
+              <Link href="/blog" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Blog</Link>
+            </li>
+            <li>
+              <Link href="/about-us" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>About Us</Link>
+            </li>
+            <li>
+              <Link href="/contact" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Contact</Link>
+            </li>
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }
