@@ -66,7 +66,7 @@ export default function () {
             {/* Add image */}
             <div className="flex justify-center">
               <Image
-                src="/images/futon_about_us.jpg"
+                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_about_us.jpg"
                 alt="Mr. Futon Showroom"
                 width={600}
                 height={400}

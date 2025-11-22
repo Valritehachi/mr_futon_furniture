@@ -118,7 +118,7 @@ export default function ContactPage() {
           {/* Showroom Image */}
           <div className="flex justify-center mt-1 mb-4 py-6">
             <Image
-              src="/images/futon_showroom.png"
+              src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_showroom.png"
               alt="Showroom"
               width={1500}
               height={450}
