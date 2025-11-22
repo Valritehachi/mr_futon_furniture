@@ -4,10 +4,10 @@ import Image from 'next/image';
 import { useEffect, useState } from 'react';
 
 const images = [
-  '/images/futon_hero_main.jpg',
-  '/images/futon_hero_1.jpg',
-  '/images/futon_hero_2.jpg',
-  '/images/futon_hero_3.jpg'
+  "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_hero_main.jpg",
+  "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_hero_1.jpg",
+  "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_hero_2.jpg",
+  "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_hero_3.jpg"
 ];
 export default function HeroSlider(){
   const [index, setIndex] = useState(0);

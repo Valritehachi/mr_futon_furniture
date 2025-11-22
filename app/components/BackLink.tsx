@@ -8,7 +8,8 @@ interface BackLinkProps {
 }
 
 export default function BackLink({ category }: BackLinkProps) {
-  const href = `/${category.toLowerCase()}`;
+  // Convert category to URL-friendly format (replace spaces with hyphens)
+  const href = `/${category.toLowerCase().replace(/\s+/g, '-')}`;
   const niceName = category.charAt(0).toUpperCase() + category.slice(1);
 
   return (
