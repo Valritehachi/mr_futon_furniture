@@ -18,11 +18,11 @@ export default function Home() {
 
       {/* MAIN CONTENT: Hero + Sidebar */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 px-4">
-        <div className="lg:col-span-8">
+        <div className="md:col-span-8">
           <HeroSlider />
         </div>
 
-        <div className="font-bold text-base md:text-lg text-center lg:text-left lg:ml-[60px]">
+        <div className="font-bold text-base md:col-span-4 md:text-lg text-center lg:text-left lg:ml-[60px]">
           <SidebarPromo />
           <div className="font-bold text-lg ml-[60px]">
             $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.

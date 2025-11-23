@@ -58,12 +58,12 @@ export default function ContactPage() {
         {/* MAIN CONTENT: Hero + Sidebar */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mt-6 px-4">
           {/* Hero Slider */}
-          <div className="lg:col-span-8">
+          <div className="md:col-span-8">
             <HeroSlider />
           </div>
 
           {/* Sidebar Promo + Text */}
-          <div className="lg:col-span-4 flex flex-col gap-4">
+          <div className="md:col-span-4 flex flex-col gap-4">
             <SidebarPromo />
             <div className="font-bold text-lg ml-[60px]">
               $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
