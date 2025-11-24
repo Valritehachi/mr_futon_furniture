@@ -33,9 +33,9 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
     const { data, error } = await supabase
       .from("frontpage")
       .select("advert_images")
-      .eq("id", 1)
+      //.eq("id", 1)
       .single();
-
+    console.log("Supabase fetchAdvertImages response:", { data, error });
     if (error) {
       console.error("Error fetching advert images:", error);
       return;
@@ -74,7 +74,7 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
       const { data: currentData } = await supabase
         .from("frontpage")
         .select("advert_images")
-        .eq("id", 1)
+        //.eq("id", 1)
         .single();
 
       const updatedAdverts = {

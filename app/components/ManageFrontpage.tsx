@@ -27,8 +27,10 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     const { data, error } = await supabase
       .from("frontpage")
       .select("hero_images, advert_images")
-      .eq("id", 1)
+      //.eq("id", 1)
       .single();
+
+    console.log("Supabase fetchHeroImages response:", { data, error });
 
     if (error) {
       console.error("Error fetching frontpage data:", error);
