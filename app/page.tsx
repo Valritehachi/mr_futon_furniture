@@ -1,15 +1,48 @@
-import Layout from './layout';
+'use client';
+
+
+
 import HeroSlider from '@/app/components/HeroSlider';
 import SidebarPromo from '@/app/components/SidebarPromo';
 import Footer from '@/app/components/Footer';
 import Navbar from './components/Navbar';
 import Logo from './components/Logo';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { supabase } from '@/utils/supabaseClient';
 
+  
 
 export default function Home() {
+
+  const [advertImages, setAdvertImages] = useState({
+    sofa_sleepers: "",
+    mattresses: "",
+    covers: "",
+    space_savers: "",
+    showroom: "",
+    accessories: "",
+  });
+
+  useEffect(() => {
+    const fetchAdvertImages = async () => {
+      const { data } = await supabase
+        .from("frontpage")
+        .select("advert_images")
+        .eq("id", 1)
+        .single();
+
+      if (data?.advert_images) {
+        setAdvertImages(data.advert_images);
+      }
+    };
+
+    fetchAdvertImages();
+  }, []);
+
+
   return (
-    <Layout>
+    <>
       {/* TOP LEFT: Logo and Navbar */}
       <div className="flex flex-col gap-2 px-4">
         <Logo />
@@ -61,11 +94,13 @@ export default function Home() {
             className="block"
           >
             <div className="aspect-[4/3] relative">
+              {advertImages.sofa_sleepers && (
               <img
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/1763761046962_RuckinBlack-FeaturedImage_(1).jpg"
+                src={advertImages.sofa_sleepers}
                 alt="Sofa Sleepers"
                 className="w-full h-full object-cover"
               />
+            )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
@@ -80,11 +115,15 @@ export default function Home() {
           {/* Futon Mattresses */}
           <Link href="/mattresses" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              <img 
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_10-inch-double-foam.png" 
-                alt="Futon Mattresses"
-                className="w-full h-full object-cover"
-              />
+
+              {advertImages.mattresses && (
+                <img
+                  src={advertImages.mattresses}
+                  alt="Futon Mattresses"
+                  className="w-full h-full object-cover"
+                />
+              )}
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Shop our Futon Mattresses</h3>
@@ -96,11 +135,14 @@ export default function Home() {
           {/* Futon Covers */}
           <Link href="/covers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              <img 
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/blog_3.jpg" 
-                alt="Futon Covers"
-                className="w-full h-full object-cover"
-              />
+
+              {advertImages.covers && (
+                <img
+                  src={advertImages.covers}
+                  alt="Futon Covers"
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Shop our Futon Covers</h3>
@@ -112,11 +154,13 @@ export default function Home() {
           {/* Space Savers */}
           <Link href="/space-savers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              <img 
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/sofa_sleeper_pink.png" 
-                alt="Space Savers"
-                className="w-full h-full object-cover"
-              />
+              {advertImages.space_savers && (
+                <img
+                  src={advertImages.space_savers}
+                  alt="Space Savers"
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
               <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">Shop our Space Savers</h3>
@@ -128,11 +172,13 @@ export default function Home() {
           {/* Visit Showroom */}
           <Link href="/contact" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              <img 
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/futon_showroom.png" 
-                alt="Visit our Showroom"
-                className="w-full h-full object-cover"
-              />
+              {advertImages.showroom && (
+                <img
+                  src={advertImages.showroom}
+                  alt="Visit our Showroom"
+                  className="w-full h-full object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Visit our Showroom</h3>
@@ -144,11 +190,13 @@ export default function Home() {
           {/* Accessories */}
           <Link href="/accessories" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              <img 
-                src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_SlattedCoffeeTable.jpg" 
-                alt="Accessories"
-                className="w-full h-48 md:h-64 object-cover"
-              />
+              {advertImages.accessories && (
+                <img
+                  src={advertImages.accessories}
+                  alt="Accessories"
+                  className="w-full h-48 md:h-64 object-cover"
+                />
+              )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
                 <h3 className="text-2xl font-bold mb-2">Shop our Accessories</h3>
@@ -215,6 +263,6 @@ export default function Home() {
       
 
       <Footer />
-    </Layout>
+    </>
   );
-}
+  }
