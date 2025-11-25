@@ -87,12 +87,12 @@ export default function Home() {
 
 
   const [advertImages, setAdvertImages] = useState({
-    sofa_sleepers: "",
-    mattresses: "",
-    covers: "",
-    space_savers: "",
-    showroom: "",
-    accessories: "",
+    sofa_sleepers: { url: "", header: "", description: "" },
+    mattresses: { url: "", header: "", description: "" },
+    covers: { url: "", header: "", description: "" },
+    space_savers: { url: "", header: "", description: "" },
+    showroom: { url: "", header: "", description: "" },
+    accessories: { url: "", header: "", description: "" },
   });
 
   useEffect(() => {
@@ -166,19 +166,19 @@ export default function Home() {
             className="block"
           >
             <div className="aspect-[4/3] relative">
-              {advertImages.sofa_sleepers && (
-              <img
-                src={advertImages.sofa_sleepers}
-                alt="Sofa Sleepers"
-                className="w-full h-full object-cover"
-              />
-            )}
+              {advertImages.sofa_sleepers?.url && (
+                <img
+                  src={advertImages.sofa_sleepers.url}
+                  alt="Sofa Sleepers"
+                  className="w-full h-full object-cover"
+                />
+              )}
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
 
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">Shop our Sofa Sleepers</h3>
-                <p className="text-sm">We have high quality sofa sleepers in a wide assortment of styles.</p>
+                <h3 className="text-2xl font-bold mb-2">{advertImages.sofa_sleepers.header}</h3>
+                <p className="text-sm">{advertImages.sofa_sleepers.description}</p>
               </div>
             </div>
           </a>
@@ -188,18 +188,20 @@ export default function Home() {
           <Link href="/mattresses" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
 
-              {advertImages.mattresses && (
+              {advertImages.mattresses?.url && (
                 <img
-                  src={advertImages.mattresses}
+                  src={advertImages.mattresses.url}
                   alt="Futon Mattresses"
                   className="w-full h-full object-cover"
                 />
               )}
 
+              
+
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">Shop our Futon Mattresses</h3>
-                <p className="text-sm">Our comfortable futon mattresses are available in a number of thickness and support options.</p>
+                <h3 className="text-2xl font-bold mb-2">{advertImages.mattresses.header}</h3>
+                <p className="text-sm">{advertImages.mattresses.description}</p>
               </div>
             </div>
           </Link>
@@ -208,17 +210,17 @@ export default function Home() {
           <Link href="/covers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
 
-              {advertImages.covers && (
+              {advertImages.covers?.url && (
                 <img
-                  src={advertImages.covers}
+                  src={advertImages.covers.url}
                   alt="Futon Covers"
                   className="w-full h-full object-cover"
                 />
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
+
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">Shop our Futon Covers</h3>
-                <p className="text-xs md:text-sm">We have a variety of futon covers in many colors and styles.</p>
+                <h3 className="text-2xl font-bold mb-2">{advertImages.covers.header}</h3>
+                <p className="text-xs md:text-sm">{advertImages.covers.description}</p>
               </div>
             </div>
           </Link>
@@ -226,17 +228,17 @@ export default function Home() {
           {/* Space Savers */}
           <Link href="/space-savers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              {advertImages.space_savers && (
+              {advertImages.space_savers?.url && (
                 <img
-                  src={advertImages.space_savers}
+                  src={advertImages.space_savers.url}
                   alt="Space Savers"
                   className="w-full h-full object-cover"
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
-              <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">Shop our Space Savers</h3>
-                <p className="text-sm">A Space Saver is our own custom futon design that fits into small areas.</p>
+                <h3 className="text-lg md:text-2xl font-bold mb-1 md:mb-2">{advertImages.space_savers.header}</h3>
+                <p className="text-sm">{advertImages.space_savers.description}</p>
               </div>
             </div>
           </Link>
@@ -244,17 +246,17 @@ export default function Home() {
           {/* Visit Showroom */}
           <Link href="/contact" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              {advertImages.showroom && (
+              {advertImages.showroom?.url && (
                 <img
-                  src={advertImages.showroom}
+                  src={advertImages.showroom.url}
                   alt="Visit our Showroom"
                   className="w-full h-full object-cover"
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">Visit our Showroom</h3>
-                <p className="text-sm">3300 S. Congress Ave, Boynton Beach FL 33426</p>
+                <h3 className="text-2xl font-bold mb-2">{advertImages.showroom.header}</h3>
+                <p className="text-sm">{advertImages.showroom.description}</p>
               </div>
             </div>
           </Link>
@@ -262,17 +264,17 @@ export default function Home() {
           {/* Accessories */}
           <Link href="/accessories" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
-              {advertImages.accessories && (
+              {advertImages.accessories?.url && (
                 <img
-                  src={advertImages.accessories}
+                  src={advertImages.accessories.url}
                   alt="Accessories"
                   className="w-full h-48 md:h-64 object-cover"
                 />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                <h3 className="text-2xl font-bold mb-2">Shop our Accessories</h3>
-                <p className="text-sm">Get our matching end tables, coffee tables or drawer systems to complete your room.</p>
+                <h3 className="text-2xl font-bold mb-2">{advertImages.accessories.header}</h3>
+                <p className="text-sm">{advertImages.accessories.description}</p>
               </div>
             </div>
           </Link>
