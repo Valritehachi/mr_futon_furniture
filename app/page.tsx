@@ -291,33 +291,39 @@ export default function Home() {
         
         {/* ⭐ FEATURED PRODUCT */}
         {featuredProduct && (
-          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-8 mb-16">
-            <h2 className="text-2xl font-bold text-blue-800 mb-4">
+          <div className="max-w-4xl w-full mx-auto bg-white rounded-lg shadow-md p-4 sm:p-6 md:p-8 mb-16">
+            <h2 className="text-xl sm:text-2xl font-bold text-blue-800 mb-4 text-center sm:text-left">
               ⭐ Featured Product
             </h2>
 
-            <img
-              src={featuredProduct.image_url}
-              alt={featuredProduct.name}
-              className="w-full h-90 object-cover rounded-lg mb-6"
-            />
+            {/* Responsive Image */}
+            <div className="w-full aspect-[4/3] mb-6">
+              <img
+                src={featuredProduct.image_url}
+                alt={featuredProduct.name}
+                className="w-full h-full object-cover rounded-lg"
+              />
+            </div>
 
-            <h3 className="text-xl font-bold text-gray-800 mb-2">
+            <h3 className="text-lg sm:text-xl font-bold text-gray-800 mb-2 text-center sm:text-left">
               {featuredProduct.name}
             </h3>
 
-            <p className="text-blue-700 font-bold text-lg mb-6">
+            <p className="text-blue-700 font-bold text-base sm:text-lg mb-6 text-center sm:text-left">
               {featuredProduct.price}
             </p>
 
-            <Link
-              href={`/products/${featuredProduct.id}`}
-              className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-            >
-              View Product →
-            </Link>
+            <div className="text-center sm:text-left">
+              <Link
+                href={`/products/${featuredProduct.id}`}
+                className="inline-block px-4 py-2 sm:px-5 sm:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition text-sm sm:text-base"
+              >
+                View Product →
+              </Link>
+            </div>
           </div>
         )}
+
 
 
         {/* ANSWERS TO COMMON QUESTIONS */}

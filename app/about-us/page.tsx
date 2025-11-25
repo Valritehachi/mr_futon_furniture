@@ -46,23 +46,30 @@ export default function () {
       </div>
 
         {/* Page content */}
-        <section className="flex-grow p-25 bg-gray-50">
-          <h1 className="text-3xl font-bold mb-12 text-center text-gray-600">
+        <section className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-50">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-8 sm:mb-12 text-center text-gray-600">
             About Us
           </h1>
+          
           <div className="max-w-4xl mx-auto space-y-6 text-gray-700">
-            <p>
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed">
               Mr. Futon Furniture Company has a rich history spanning over 35 years as a prominent manufacturer of futon furniture in the USA. Founded with a vision to provide high-quality futon products, the company has been dedicated to supplying Florida stores with a wide range of options for futon frames, futon mattresses, and futon covers.
               Since its establishment, Mr. Futon Furniture has built a solid reputation for its commitment to craftsmanship and attention to detail. The company takes pride in producing futon furniture that combines functionality, comfort, and style. Their extensive selection of futon frames ensures that customers can find the perfect fit for their preferences and decor.
               When it comes to futon mattresses, Mr. Futon Furniture excels in offering a diverse range of Gold Bond futon mattresses tailored to meet varying comfort needs. Customers can find the ideal level of support and softness for a restful sleep or comfortable seating experience.
             </p>
-            <p>
+
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed">
               In addition to frames and mattresses, Mr. Futon Furniture understands the importance of personalization. With an array of futon covers available, customers can effortlessly customize their futons to match their individual style and enhance the aesthetic appeal of their living spaces. From vibrant patterns to elegant solids, the options are plentiful, ensuring that each customer can find a cover that complements their unique taste.
             </p>
-            <p>
+
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed">
               Over the years, Mr. Futon Furniture has continuously evolved its product offerings and manufacturing techniques, staying abreast of changing trends and customer demands. With a commitment to using high-quality materials and employing skilled craftsmanship, the company has consistently delivered durable and long-lasting futon furniture that withstands the test of time.
             </p>
-            <p>As a trusted supplier to Florida stores, Mr. Futon Furniture has become a go-to destination for customers seeking reliable and stylish futon solutions. Their dedication to excellence, combined with a customer-centric approach, has fostered lasting relationships with both retailers and consumers alike.</p>
+
+            <p className="text-base sm:text-lg md:text-xl leading-relaxed">
+              As a trusted supplier to Florida stores, Mr. Futon Furniture has become a go-to destination for customers seeking reliable and stylish futon solutions. Their dedication to excellence, combined with a customer-centric approach, has fostered lasting relationships with both retailers and consumers alike.
+            </p>
+
             {/* Add image */}
             <div className="flex justify-center">
               <Image
@@ -70,16 +77,16 @@ export default function () {
                 alt="Mr. Futon Showroom"
                 width={600}
                 height={400}
-                className="rounded shadow"
+                className="rounded shadow w-full max-w-md sm:max-w-lg md:max-w-xl"
               />
-             
             </div>
-            <p className="mt-4 text-center text-lg text-gray-500">
+
+            <p className="mt-4 text-center text-base sm:text-lg md:text-xl text-gray-500">
               Frames are hand made in South Florida.
             </p>
-            
           </div>
         </section>
+
       </div>
       {/*additional content- google review*/}
       <div className="bg-blue-100 p-6 rounded-lg max-w-5xl mx-auto mt-8">

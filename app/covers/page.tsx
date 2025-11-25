@@ -71,49 +71,49 @@ export default function CoversPage() {
       </div>
 
       {/* Page content */}
-      <section className="flex-grow p-30 bg-gray-50">
-        <h1 className="text-4xl font-bold mb-4 text-center text-gray-700">
+      <section className="flex-grow p-4 sm:p-6 md:p-8 bg-gray-50">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-center text-gray-700">
           Futon Covers
         </h1>
         
-        <p className="text-center text-2xl text-gray-600 mb-12 max-w-3xl mx-auto">
-          Just a small sample or what is available, there are hundreds of fabrics in the store to chose from.
+        <p className="text-center text-base sm:text-lg md:text-xl text-gray-600 mb-12 max-w-3xl mx-auto">
+          Just a small sample or what is available, there are hundreds of fabrics in the store to choose from.
           Prices start at $60 for a full solid.
         </p>
 
         {loading ? (
-          <div className="text-center py-20">
-            <p className="text-xl text-gray-500">Loading products...</p>
+          <div className="text-center py-10 sm:py-20">
+            <p className="text-lg sm:text-xl text-gray-500">Loading products...</p>
           </div>
         ) : products.length === 0 ? (
-          <div className="text-center py-20">
-            <p className="text-xl text-gray-500">No covers available yet.</p>
+          <div className="text-center py-10 sm:py-20">
+            <p className="text-lg sm:text-xl text-gray-500">No covers available yet.</p>
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto px-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-15">
+          <div className="max-w-7xl mx-auto px-2 sm:px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
               {products.map((product) => (
                 <div
                   key={product.id}
                   className="group cursor-pointer"
                 >
                   {/* Product Image */}
-                  <div className="aspect-square bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-md hover:shadow-xl transition-shadow">
+                  <div className="aspect-square w-full bg-gray-100 rounded-lg overflow-hidden mb-4 shadow-md hover:shadow-xl transition-shadow">
                     {product.image_url ? (
                       <img
                         src={product.image_url}
                         alt={product.name}
-                        className="w-80 h-68 object-cover group-hover:scale-105 transition-transform duration-300"
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-6xl">
+                      <div className="w-full h-full flex items-center justify-center text-gray-400 text-4xl sm:text-5xl">
                         🛋️
                       </div>
                     )}
                   </div>
 
                   {/* Product Name */}
-                  <h3 className="text-center text-lg font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
+                  <h3 className="text-center text-lg sm:text-xl font-semibold text-gray-800 mb-2 group-hover:text-blue-600 transition-colors">
                     {product.name}
                   </h3>
                   
