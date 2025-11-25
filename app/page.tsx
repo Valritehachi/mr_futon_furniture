@@ -1,19 +1,90 @@
 'use client';
 
-
-
 import HeroSlider from '@/app/components/HeroSlider';
 import SidebarPromo from '@/app/components/SidebarPromo';
 import Footer from '@/app/components/Footer';
 import Navbar from './components/Navbar';
 import Logo from './components/Logo';
+import MovingPromotions from './components/MovingPromotions';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { supabase } from '@/utils/supabaseClient';
 
-  
+
+interface Product {
+  id: number;
+  name: string;
+  image_url: string;
+  price: string;
+  featured: boolean;
+}
+
+interface Promotion {
+  id: number;
+  title: string;
+  description: string;
+  image_url?: string | null;
+  start_date: string;
+  end_date: string;
+  special_price?: string;
+  placement: string[];
+  priority: number;
+}
+
+
 
 export default function Home() {
+
+  const [featuredProduct, setFeaturedProduct] = useState<Product | null>(null);
+  const [products, setProducts] = useState<Product[]>([]);
+  const [promotions, setPromotions] = useState<Promotion[]>([]);
+
+  useEffect(() => {
+    const loadFeaturedProduct = async () => {
+      
+      const { data, error } = await supabase
+        .from("products")
+        .select("*")
+        .eq("featured", true)
+        .limit(1)
+        .maybeSingle();
+
+      if (error) console.log(error);
+
+      setFeaturedProduct(data);
+      
+    };
+
+    loadFeaturedProduct();
+  }, []);
+
+  useEffect(() => {
+    const fetchPromotions = async () => {
+      const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+
+      const { data, error } = await supabase
+        .from("promotions")
+        .select("*")
+        .lte("start_date", today)
+        .gte("end_date", today)
+        .order("priority", { ascending: false });
+
+      if (error) {
+        console.error("Error fetching promotions:", error);
+        return;
+      }
+
+      // Filter only homepage placements and valid images
+      const activePromos = (data || []).filter(
+        p => p.placement?.includes("homepage") && p.image_url
+      );
+
+      setPromotions(activePromos);
+    };
+
+    fetchPromotions();
+  }, []);
+
 
   const [advertImages, setAdvertImages] = useState({
     sofa_sleepers: "",
@@ -47,6 +118,7 @@ export default function Home() {
       <div className="flex flex-col gap-2 px-4">
         <Logo />
         <Navbar />
+        <MovingPromotions />
       </div>
 
       {/* MAIN CONTENT: Hero + Sidebar */}
@@ -216,6 +288,38 @@ export default function Home() {
           <p className="text-gray-600 font-semibold">— Irena, Google Review</p>
         </div>
 
+        
+        {/* ⭐ FEATURED PRODUCT */}
+        {featuredProduct && (
+          <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 md:p-8 mb-16">
+            <h2 className="text-2xl font-bold text-blue-800 mb-4">
+              ⭐ Featured Product
+            </h2>
+
+            <img
+              src={featuredProduct.image_url}
+              alt={featuredProduct.name}
+              className="w-full h-90 object-cover rounded-lg mb-6"
+            />
+
+            <h3 className="text-xl font-bold text-gray-800 mb-2">
+              {featuredProduct.name}
+            </h3>
+
+            <p className="text-blue-700 font-bold text-lg mb-6">
+              {featuredProduct.price}
+            </p>
+
+            <Link
+              href={`/products/${featuredProduct.id}`}
+              className="inline-block px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
+            >
+              View Product →
+            </Link>
+          </div>
+        )}
+
+
         {/* ANSWERS TO COMMON QUESTIONS */}
         <div className="max-w-7xl mx-auto mb-16">
           <h1 className="text-3xl font-bold underline underline-offset-6 text-underline text-blue-800 mb-8">Answers to Common Futon Questions</h1>
@@ -259,8 +363,6 @@ export default function Home() {
 
 
       </section>
-
-      
 
       <Footer />
     </>

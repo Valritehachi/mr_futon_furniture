@@ -2,8 +2,11 @@ import { useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
+import { useEffect } from "react";
 
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
+
+
 
 const productCategories = [
   "Futon Sets",
@@ -35,6 +38,8 @@ interface ManageProductsProps {
   fetchProducts: () => Promise<void>;
 }
 
+
+
 export default function ManageProducts({ products, fetchProducts }: ManageProductsProps) {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -42,16 +47,50 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
   const [productCategory, setProductCategory] = useState("");
   const [productFeatured, setProductFeatured] = useState(false);
   const [editingProductId, setEditingProductId] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
-  const [mattress6Price, setMattress6Price] = useState("");
-  const [mattress8Price, setMattress8Price] = useState("");
-  const [mattress9Price, setMattress9Price] = useState("");
-  const [mattress10Price, setMattress10Price] = useState("");
+  interface MattressOption {
+    label: string;
+    price: string;
+    image: string | File | null;
+  }
 
-  const [mattress6Image, setMattress6Image] = useState("");
-  const [mattress8Image, setMattress8Image] = useState("");
-  const [mattress9Image, setMattress9Image] = useState("");
-  const [mattress10Image, setMattress10Image] = useState("");
+
+
+  useEffect(() => {
+    if (productCategory === "Futon Sets" && mattresses.length === 0) {
+      const initialMattresses: MattressOption[] = [
+        { label: "6 Inch Single Foam", price: "", image: "" },
+        { label: "8 Inch Double Foam", price: "", image: "" },
+        { label: "9 Inch Triple Foam", price: "", image: "" },
+        { label: "10 Inch Double Foam", price: "", image: "" },
+      ];
+      setMattresses(initialMattresses);
+      setVisibleMattresses(initialMattresses.map(() => true));
+      setMattressImageFiles(initialMattresses.map(() => null));
+
+    }
+  }, [productCategory]);
+  
+
+  const resetProductForm = () => {
+    setEditingProductId(null);
+    setProductName("");
+    setProductDescription("");
+    setProductPrice("");
+    setProductCategory("");
+    setProductFeatured(false);
+    setImageFile(null);
+    setCurrentImageUrl(null);
+    setRemoveImage(false);
+    setMattresses([]);
+    setVisibleMattresses([]);
+    setMattressImageFiles([]);
+  };
+
+  const [mattresses, setMattresses] = useState<MattressOption[]>([]);
+  const [visibleMattresses, setVisibleMattresses] = useState<boolean[]>([]);
+  const [mattressImageFiles, setMattressImageFiles] = useState<(File | null)[]>([]);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null);
@@ -88,6 +127,27 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     return data.publicUrl;
   };
 
+  const uploadMattressImage = async (file: File, index: number): Promise<string | null> => {
+    const fileName = `${Date.now()}_${file.name.replace(/\s/g, "_")}`;
+    
+    const { error } = await supabase.storage
+      .from("images")
+      .upload(fileName, file);
+
+    if (error) {
+      console.error(error);
+      alert(`Failed to upload mattress image: ${error.message}`);
+      return null;
+    }
+
+    const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+    return data.publicUrl;
+  };
+
+  const filteredProducts = products.filter((product) =>
+    product.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   const saveProduct = async () => {
     if (!productName.trim() || !productCategory) {
       alert("Please fill in product name and category");
@@ -95,21 +155,53 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     }
 
     if (productCategory === "Futon Sets") {
-      if (!mattress6Price || !mattress8Price || !mattress9Price || !mattress10Price) {
+      const allPricesFilled = mattresses.every((m, idx) => visibleMattresses[idx] ? m.price : true);
+      if (!allPricesFilled) {
         alert("Please fill in all mattress prices for Futon Sets");
         return;
       }
     }
 
+    
+
     setLoading(true);
     let imageUrl = await uploadImage("images");
 
-    const mattressOptions = productCategory === "Futon Sets" ? [
-      { size: "6 Inch Single Foam", price: mattress6Price, image_url: mattress6Image || null },
-      { size: "8 Inch Double Foam", price: mattress8Price, image_url: mattress8Image || null },
-      { size: "9 Inch Triple Foam", price: mattress9Price, image_url: mattress9Image || null },
-      { size: "10 Inch Double Foam", price: mattress10Price, image_url: mattress10Image || null },
-    ] : null;
+    let mattressOptions = null;
+
+    if (productCategory === "Futon Sets") {
+      mattressOptions = [];
+
+      for (let i = 0; i < mattresses.length; i++) {
+        if (!visibleMattresses[i]) continue;
+
+        const m = mattresses[i];
+        let imgUrl = null;
+
+        // Upload if file selected
+        if (m.image instanceof File) {
+          const fileName = `${Date.now()}_${m.image.name.replace(/\s/g, "_")}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from("images")
+            .upload(fileName, m.image);
+
+          if (!uploadError) {
+            const { data } = supabase.storage
+              .from("images")
+              .getPublicUrl(fileName);
+
+            imgUrl = data.publicUrl;
+          }
+        }
+
+        mattressOptions.push({
+          size: m.label,
+          price: m.price,
+          image_url: imgUrl || (typeof m.image === "string" ? m.image : null),
+        });
+      }
+    }
 
     if (editingProductId) {
       const { data, error } = await supabase
@@ -178,49 +270,20 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     setRemoveImage(false);
 
     if (product.mattress_options && Array.isArray(product.mattress_options)) {
-      const options = product.mattress_options;
-      setMattress6Price(options.find(o => o.size.includes("6"))?.price || "");
-      setMattress8Price(options.find(o => o.size.includes("8"))?.price || "");
-      setMattress9Price(options.find(o => o.size.includes("9"))?.price || "");
-      setMattress10Price(options.find(o => o.size.includes("10"))?.price || "");
+      setMattresses(product.mattress_options.map(opt => ({
+        label: opt.size,
+        price: opt.price,
+        image: opt.image_url || "",
+      })));
+      setVisibleMattresses(product.mattress_options.map(() => true));
+      setMattressImageFiles(product.mattress_options.map(() => null));
 
-      setMattress6Image(options.find(o => o.size.includes("6"))?.image_url || "");
-      setMattress8Image(options.find(o => o.size.includes("8"))?.image_url || "");
-      setMattress9Image(options.find(o => o.size.includes("9"))?.image_url || "");
-      setMattress10Image(options.find(o => o.size.includes("10"))?.image_url || "");
     } else {
-      setMattress6Price("");
-      setMattress8Price("");
-      setMattress9Price("");
-      setMattress10Price("");
-      setMattress6Image("");
-      setMattress8Image("");
-      setMattress9Image("");
-      setMattress10Image("");
+      setMattresses([]);
+      setVisibleMattresses([]);
     }
 
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
-  const resetProductForm = () => {
-    setEditingProductId(null);
-    setProductName("");
-    setProductDescription("");
-    setProductPrice("");
-    setProductCategory("");
-    setProductFeatured(false);
-    setImageFile(null);
-    setCurrentImageUrl(null);
-    setRemoveImage(false);
-    setMattress6Price("");
-    setMattress8Price("");
-    setMattress9Price("");
-    setMattress10Price("");
-    setMattress6Image("");
-    setMattress8Image("");
-    setMattress9Image("");
-    setMattress10Image("");
-  };
+  }
 
   const ImageUploader = () => (
     <div>
@@ -355,6 +418,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                 className="bg-white rounded-xl"
               />
             </div>
+            
 
             {productCategory === "Futon Sets" && (
               <div className="bg-yellow-50 border-2 border-yellow-200 rounded-xl p-6">
@@ -366,37 +430,80 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                 </p>
                 
                 <div className="space-y-6">
-                  {[
-                    { label: "6 Inch Single Foam", price: mattress6Price, setPrice: setMattress6Price, image: mattress6Image, setImage: setMattress6Image },
-                    { label: "8 Inch Double Foam", price: mattress8Price, setPrice: setMattress8Price, image: mattress8Image, setImage: setMattress8Image },
-                    { label: "9 Inch Triple Foam", price: mattress9Price, setPrice: setMattress9Price, image: mattress9Image, setImage: setMattress9Image },
-                    { label: "10 Inch Double Foam", price: mattress10Price, setPrice: setMattress10Price, image: mattress10Image, setImage: setMattress10Image }
-                  ].map((mattress, idx) => (
-                    <div key={idx} className="border-b pb-4 last:border-b-0">
-                      <h4 className="font-semibold text-gray-700 mb-3">{mattress.label}</h4>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Price</label>
-                          <input
-                            type="text"
-                            placeholder="e.g., $459.00"
-                            value={mattress.price}
-                            onChange={(e) => mattress.setPrice(e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-sm font-semibold text-gray-700 mb-2">Image URL</label>
-                          <input
-                            type="text"
-                            placeholder="https://..."
-                            value={mattress.image}
-                            onChange={(e) => mattress.setImage(e.target.value)}
-                            className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
-                          />
+                  {mattresses.map((mattress, idx) => (
+                    visibleMattresses[idx] && (
+                      <div key={idx} className="border-b pb-4 last:border-b-0 relative">
+
+                        {/* X BUTTON */}
+                        <button
+                          onClick={() => {
+                            const updated = [...visibleMattresses];
+                            updated[idx] = false;
+                            setVisibleMattresses(updated);
+                          }}
+                          className="absolute top-0 right-0 bg-red-500 text-white px-2 py-1 rounded-full text-xs hover:bg-red-600"
+                        >
+                          ✕
+                        </button>
+
+                        <h4 className="font-semibold text-gray-700 mb-3">{mattress.label}</h4>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Price</label>
+                            <input
+                              type="text"
+                              placeholder="e.g., $459.00"
+                              value={mattress.price}
+                              onChange={(e) => {
+                                const updated = [...mattresses];
+                                updated[idx].price = e.target.value;
+                                setMattresses(updated);
+                              }}
+                              className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+                            />
+                          </div>
+                          <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-2">Image</label>
+
+                            {/* Existing image from DB */}
+                            {typeof mattress.image === "string" && mattress.image !== "" && (
+                              <img
+                                src={mattress.image}
+                                alt={mattress.label}
+                                className="w-full h-48 object-cover rounded-lg border mb-2"
+                              />
+                            )}
+
+                            {/* Image picker */}
+                            <input
+                              type="file"
+                              accept="image/*"
+                              onChange={(e) => {
+                                if (e.target.files && e.target.files[0]) {
+                                  const file = e.target.files[0];
+
+                                  const updated = [...mattresses];
+                                  updated[idx].image = file; // store file
+                                  setMattresses(updated);
+                                }
+                              }}
+                              className="w-full border p-2 rounded"
+                            />
+
+                            {/* Preview new image */}
+                            {mattress.image instanceof File && (
+                              <img
+                                src={URL.createObjectURL(mattress.image)}
+                                className="w-full h-48 object-cover mt-3 rounded-lg border"
+                              />
+                            )}
+                          </div>
+
                         </div>
                       </div>
-                    </div>
+                    )
+                 
                   ))}
                 </div>
               </div>
@@ -447,15 +554,33 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
               {products.length}
             </span>
           </div>
+          
+          <div className="relative mt-5">
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full px-4 py-2 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
+          />
+          <button
+            type="button"
+            onClick={() => setSearchQuery("")} 
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1.5 rounded-lg"
+            title="Clear search"
+          >
+            🔍
+          </button>
+        </div>
 
-          <div className="space-y-3 overflow-y-auto flex-1">
-            {products.length === 0 ? (
+          <div className="space-y-3 overflow-y-auto mt-5 flex-1">
+            {filteredProducts.length === 0 ? (
               <div className="text-center py-12">
                 <div className="text-6xl mb-4">🛋️</div>
                 <p className="text-gray-400 font-medium">No products yet</p>
               </div>
             ) : (
-              products.map((product) => (
+              filteredProducts.map((product) => (
                 <div
                   key={product.id}
                   className={`border-2 rounded-xl p-4 transition-all ${
@@ -509,3 +634,4 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     </div>
   );
 }
+  
