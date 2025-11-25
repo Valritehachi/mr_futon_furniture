@@ -30,11 +30,13 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
   const [loading, setLoading] = useState(false);
 
   const fetchAdvertImages = async () => {
+    console.log("🛋️ Starting fetchAdvertImages...");
     const { data, error } = await supabase
       .from("frontpage")
       .select("advert_images")
       //.eq("id", 1)
       .single();
+      
     console.log("Supabase fetchAdvertImages response:", { data, error });
     if (error) {
       console.error("Error fetching advert images:", error);

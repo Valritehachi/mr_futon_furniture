@@ -121,7 +121,7 @@
 //     }
 //     };
 
-//     const fetchArticles = async () => {
+//     ßArticles = async () => {
 //         const { data, error } = await supabase
 //             .from("blog")
 //             .select("*")
@@ -1487,19 +1487,7 @@ export default function ArticlesEditor() {
       setArticles(data as Article[]);
     }
   };
-
   // Load Settings
-  // useEffect(() => {
-  //   const loadSettings = async () => {
-  //     const { data } = await supabase.from("settings").select("*").single();
-  //     if (data) {
-  //       setEmail(data.store_email || "");
-  //       setPhone(data.store_phone || "");
-  //       setHours(data.working_hours || [""]);
-  //     }
-  //   };
-  //   loadSettings();
-  // }, []);
 
   useEffect(() => {
     const loadSettings = async () => {

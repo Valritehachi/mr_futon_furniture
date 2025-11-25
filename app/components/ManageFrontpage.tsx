@@ -24,6 +24,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
   // Fetch hero images from database (like fetchArticles in ManageBlog)
   const fetchHeroImages = async () => {
+    console.log("🛋️ Starting fetchHeroImages...");
     const { data, error } = await supabase
       .from("frontpage")
       .select("hero_images, advert_images")
