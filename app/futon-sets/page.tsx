@@ -64,7 +64,7 @@ export default function FutonSetsPage() {
         {/* Sidebar Promo + Text */}
         <div className="md:col-span-4 flex flex-col gap-4">
           <SidebarPromo />
-          <div className="font-bold text-base md:text-lg text-center lg:text-left lg:ml-[60px]">
+          <div className="font-bold text-base md:text-lg text-start lg:text-left lg:ml-[60px]">
             $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
           </div>
         </div>

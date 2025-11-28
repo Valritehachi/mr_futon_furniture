@@ -28,7 +28,7 @@ export default function ContactForm() {
     }
 
     try {
-      const res = await fetch("/api/contact_form_submit", {
+      const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -40,6 +40,7 @@ export default function ContactForm() {
       });
 
       const data = await res.json();
+      console.log("Received data:", { name, email, message, token });
 
       if (!res.ok) {
         setStatus("❌ Something went wrong. Try again.");
@@ -51,6 +52,9 @@ export default function ContactForm() {
         setMessage("");
         recaptchaRef.current?.reset();
       }
+
+      console.log("reCAPTCHA response:", data);
+
     } catch (err) {
       console.error(err);
       setStatus("❌ Server error.");
