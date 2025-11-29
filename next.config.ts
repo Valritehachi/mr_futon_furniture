@@ -34,14 +34,14 @@ const nextConfig: NextConfig = {
       },
       {
         source: '/product-category/futon-mattresses/:path*',
-        destination: '/futon-mattresses',
+        destination: '/mattresses',
         permanent: true,
       },
       
       // Catch-all for other old product categories
       {
         source: '/product-category/:slug*',
-        destination: '/shop',
+        destination: '/contact',
         permanent: true,
       },
     ];
