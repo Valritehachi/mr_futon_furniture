@@ -158,13 +158,8 @@ export default function Home() {
         {/* CATEGORY LINKS GRID */}
         <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-12 md:my-20 gap-4 md:gap-6 mb-16">
           {/* Sofa Sleepers */}
-          
-          <a
-            href="https://smallsofasleepers.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
+
+          <Link href="/futon-sets" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
             <div className="aspect-[4/3] relative">
               {advertImages.sofa_sleepers?.url && (
                 <img
@@ -181,7 +176,7 @@ export default function Home() {
                 <p className="text-sm">{advertImages.sofa_sleepers.description}</p>
               </div>
             </div>
-          </a>
+          </Link>
           
 
           {/* Futon Mattresses */}
@@ -195,8 +190,6 @@ export default function Home() {
                   className="w-full h-full object-cover"
                 />
               )}
-
-              
 
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
@@ -226,7 +219,14 @@ export default function Home() {
           </Link>
 
           {/* Space Savers */}
-          <Link href="/space-savers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-12 md:my-20 gap-4 md:gap-6 mb-16">
+            <a
+              href="https://smallsofasleepers.com/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block"
+            >
+            
             <div className="aspect-[4/3] relative">
               {advertImages.space_savers?.url && (
                 <img
@@ -241,7 +241,8 @@ export default function Home() {
                 <p className="text-sm">{advertImages.space_savers.description}</p>
               </div>
             </div>
-          </Link>
+            </a>
+          </div>
 
           {/* Visit Showroom */}
           <Link href="/contact" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
