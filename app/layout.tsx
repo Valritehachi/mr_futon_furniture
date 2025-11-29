@@ -6,8 +6,8 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'My Futon Site',
-  description: 'A beautiful furniture website built with Next.js',
+  title: 'Mr Futon Furniture',
+  description: 'High Quality Futon Sofa Sleepers. All Futons And Frames Are Made In The USA.Our Prices Are Less Than Amazon, Wayfair Or Any Online Futon Store In The Usa.',
 };
 
 export default function RootLayout({

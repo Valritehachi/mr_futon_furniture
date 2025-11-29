@@ -219,14 +219,14 @@ export default function Home() {
           </Link>
 
           {/* Space Savers */}
-          <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 my-12 md:my-20 gap-4 md:gap-6 mb-16">
-            <a
-              href="https://smallsofasleepers.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block"
-            >
-            
+          
+          <a
+            href="https://smallsofasleepers.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="block"
+          >
+          
             <div className="aspect-[4/3] relative">
               {advertImages.space_savers?.url && (
                 <img
@@ -241,8 +241,8 @@ export default function Home() {
                 <p className="text-sm">{advertImages.space_savers.description}</p>
               </div>
             </div>
-            </a>
-          </div>
+          </a>
+         
 
           {/* Visit Showroom */}
           <Link href="/contact" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
