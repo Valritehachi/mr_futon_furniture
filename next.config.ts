@@ -12,6 +12,40 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      // Futon Frames -> Futon Sets
+      {
+        source: '/product-category/futon-frames',
+        destination: '/futon-sets',
+        permanent: true,
+      },
+      {
+        source: '/product-category/futon-frames/:path*',
+        destination: '/futon-sets',
+        permanent: true,
+      },
+      
+      // Futon Mattresses
+      {
+        source: '/product-category/futon-mattresses',
+        destination: '/futon-mattresses',
+        permanent: true,
+      },
+      {
+        source: '/product-category/futon-mattresses/:path*',
+        destination: '/futon-mattresses',
+        permanent: true,
+      },
+      
+      // Catch-all for other old product categories
+      {
+        source: '/product-category/:slug*',
+        destination: '/shop',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
