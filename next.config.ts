@@ -29,12 +29,26 @@ const nextConfig: NextConfig = {
       // Futon Mattresses
       {
         source: '/product-category/futon-mattresses',
-        destination: '/futon-mattresses',
+        destination: '/mattresses',
         permanent: true,
       },
       {
         source: '/product-category/futon-mattresses/:path*',
         destination: '/mattresses',
+        permanent: true,
+      },
+
+       // Shop page redirect
+      {
+        source: '/shop',
+        destination: '/contact',
+        permanent: true,
+      },
+      
+      // Catch-all for other old product categories
+      {
+        source: '/product-category/:slug*',
+        destination: '/contact',
         permanent: true,
       },
       
