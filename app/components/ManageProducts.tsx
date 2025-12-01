@@ -40,6 +40,8 @@ interface ManageProductsProps {
 
 
 
+
+
 export default function ManageProducts({ products, fetchProducts }: ManageProductsProps) {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -56,19 +58,35 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
   }
 
 
+  const defaultMattressOptions: MattressOption[] = [
+    {
+      label: "6 Inch Single Foam",
+      price: "",
+      image: "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_6-inch-single-foam-featuredimage.jpg",
+    },
+    {
+      label: "8 Inch Double Foam",
+      price: "",
+      image: "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_8-inch-double-foam-featuredimage.jpg",
+    },
+    {
+      label: "9 Inch Triple Foam",
+      price: "",
+      image: "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_9-inch-triple-foam-featuredimage.jpg",
+    },
+    {
+      label: "10 Inch Double Foam",
+      price: "",
+      image: "https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/mff_10-inch-double-foam.png",
+    },
+  ];
+
 
   useEffect(() => {
     if (productCategory === "Futon Sets" && mattresses.length === 0) {
-      const initialMattresses: MattressOption[] = [
-        { label: "6 Inch Single Foam", price: "", image: "" },
-        { label: "8 Inch Double Foam", price: "", image: "" },
-        { label: "9 Inch Triple Foam", price: "", image: "" },
-        { label: "10 Inch Double Foam", price: "", image: "" },
-      ];
-      setMattresses(initialMattresses);
-      setVisibleMattresses(initialMattresses.map(() => true));
-      setMattressImageFiles(initialMattresses.map(() => null));
-
+      setMattresses(defaultMattressOptions);
+      setVisibleMattresses(defaultMattressOptions.map(() => true));
+      setMattressImageFiles(defaultMattressOptions.map(() => null));
     }
   }, [productCategory]);
   
@@ -426,9 +444,9 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                   🛏️ Mattress Pricing Options
                 </h3>
                 <p className="text-sm text-gray-600 mb-4">
-                  Enter prices and image URLs for each mattress size.
+                  Enter prices and images for each mattress size.
                 </p>
-                
+
                 <div className="space-y-6">
                   {mattresses.map((mattress, idx) => (
                     visibleMattresses[idx] && (
@@ -463,10 +481,11 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                               className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none"
                             />
                           </div>
+
                           <div>
                             <label className="block text-sm font-semibold text-gray-700 mb-2">Image</label>
 
-                            {/* Existing image from DB */}
+                            {/* Existing image */}
                             {typeof mattress.image === "string" && mattress.image !== "" && (
                               <img
                                 src={mattress.image}
@@ -482,7 +501,6 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                               onChange={(e) => {
                                 if (e.target.files && e.target.files[0]) {
                                   const file = e.target.files[0];
-
                                   const updated = [...mattresses];
                                   updated[idx].image = file; // store file
                                   setMattresses(updated);
@@ -499,11 +517,9 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
                               />
                             )}
                           </div>
-
                         </div>
                       </div>
                     )
-                 
                   ))}
                 </div>
               </div>

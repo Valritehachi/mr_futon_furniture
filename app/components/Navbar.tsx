@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Image from "next/image";
 import { useRef } from "react";
-
+import SiteSearch from "./SiteSearch";
 
 
 
@@ -119,25 +119,7 @@ export default function Navbar() {
             {open && (
               <div className="absolute top-full right-0 mt-2 w-72 bg-white border rounded-xl shadow-xl p-4 z-50 animate-fadeIn">
 
-                {/* Search Input */}
-                <div className="flex items-center gap-2 border rounded-lg px-3 py-2 shadow-sm focus-within:ring-2 focus-within:ring-blue-300">
-                  <svg width="18" height="18" viewBox="0 0 24 24">
-                    <path d="M21 21l-4.35-4.35" stroke="gray" strokeWidth="2" strokeLinecap="round"/>
-                  </svg>
-                  <input
-                    type="text"
-                    placeholder="Search products..."
-                    className="w-full text-sm focus:outline-none"
-                  />
-                </div>
-
-                {/* Search Suggestions */}
-                <ul className="mt-3 max-h-48 overflow-auto text-sm">
-                  <li className="py-2 px-2 hover:bg-gray-100 rounded cursor-pointer">Futon Sofa</li>
-                  <li className="py-2 px-2 hover:bg-gray-100 rounded cursor-pointer">Premium 8" Mattress</li>
-                  <li className="py-2 px-2 hover:bg-gray-100 rounded cursor-pointer">Wooden Frame Combo</li>
-                  <li className="py-2 px-2 hover:bg-gray-100 rounded cursor-pointer">Removable Covers</li>
-                </ul>
+                <SiteSearch />
 
               </div>
             )}

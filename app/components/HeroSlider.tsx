@@ -215,13 +215,15 @@ export default function HeroSlider() {
             {/* Text overlay */}
             {image.text && (
               <div className="absolute bottom-12 sm:bottom-14 left-0 right-0 flex justify-center px-4">
-                <div className="bg-black/70 backdrop-blur-sm text-white px-6 py-3 rounded-lg shadow-lg max-w-2xl text-center">
-                  <p className="text-sm sm:text-base md:text-lg lg:text-xl font-semibold">
-                    {image.text}
-                  </p>
-                </div>
+              <div className="bg-[rgba(255,255,255,0.1)] px-6 py-3 rounded-lg shadow-lg max-w-2xl text-center">
+                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-gray-900 font-bold">
+                  {image.text}
+                </p>
               </div>
+            </div>
             )}
+
+
           </div>
         ))}
       </div>
