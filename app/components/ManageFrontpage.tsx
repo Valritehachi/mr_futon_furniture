@@ -413,8 +413,9 @@ import ManageAdverts from "./ManageAdverts";
 
 interface HeroImage {
   url: string;
-  text?: string;
+  text: string;
 }
+// type HeroImage = string;
 
 interface ManageFrontPageProps {
   heroImages: HeroImage[];
@@ -423,6 +424,7 @@ interface ManageFrontPageProps {
 
 export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFrontPageProps) {
   const [newHeroImage, setNewHeroImage] = useState<File | null>(null);
+  
   const [newHeroText, setNewHeroText] = useState("");
   const [editingHeroIndex, setEditingHeroIndex] = useState<number | null>(null);
   const [replaceHeroImage, setReplaceHeroImage] = useState<File | null>(null);
@@ -503,8 +505,12 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
   // --- Save Edited Hero ---
   const saveEditedHero = async (index: number) => {
-    let newUrl = heroImages[index].url;
+    const current = heroImages[index];
 
+    let newUrl = current.url;
+    let newText = replaceHeroText || current.text;
+
+    // If image is replaced, upload new file
     if (replaceHeroImage) {
       const fileName = `${Date.now()}_${replaceHeroImage.name.replace(/\s/g, "_")}`;
       const { error: uploadError } = await supabase.storage.from("images").upload(fileName, replaceHeroImage);
@@ -514,10 +520,15 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
       newUrl = data.publicUrl;
     }
 
-    const updatedImages = [...heroImages];
-    updatedImages[index] = { url: newUrl, text: replaceHeroText };
+    // Correct HeroImage[] array
+    const updatedImages: HeroImage[] = heroImages.map((img, i) =>
+      i === index ? { url: newUrl, text: newText } : img
+    );
 
-    const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
+    const { error } = await supabase
+      .from("frontpage")
+      .update({ hero_images: updatedImages })
+      .eq("id", 1);
 
     if (!error) {
       alert("Hero image updated!");
