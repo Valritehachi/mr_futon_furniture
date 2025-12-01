@@ -415,7 +415,6 @@ interface HeroImage {
   url: string;
   text: string;
 }
-// type HeroImage = string;
 
 interface ManageFrontPageProps {
   heroImages: HeroImage[];
@@ -423,8 +422,10 @@ interface ManageFrontPageProps {
 }
 
 export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFrontPageProps) {
+  // Safety check - this is CRITICAL to prevent undefined errors
+  const safeHeroImages = heroImages || [];
+
   const [newHeroImage, setNewHeroImage] = useState<File | null>(null);
-  
   const [newHeroText, setNewHeroText] = useState("");
   const [editingHeroIndex, setEditingHeroIndex] = useState<number | null>(null);
   const [replaceHeroImage, setReplaceHeroImage] = useState<File | null>(null);
@@ -453,7 +454,6 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     }
 
     if (data?.hero_images) {
-      // Normalize all images to {url, text}
       const formattedImages: HeroImage[] = data.hero_images.map((img: any) =>
         typeof img === "string" ? { url: img, text: "" } : img
       );
@@ -478,7 +478,6 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     const { data } = supabase.storage.from("images").getPublicUrl(fileName);
     const publicUrl = data.publicUrl;
 
-    // Fetch current images
     const { data: currentData } = await supabase
       .from("frontpage")
       .select("hero_images")
@@ -489,7 +488,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
       typeof img === "string" ? { url: img, text: "" } : img
     );
 
-    const updatedImages = [...currentImages, { url: publicUrl, text: newHeroText }];
+    const updatedImages = [...currentImages, { url: publicUrl, text: newHeroText || "" }];
 
     const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
@@ -497,7 +496,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
       alert("Hero image added!");
       setNewHeroImage(null);
       setNewHeroText("");
-      fetchHeroImages();
+      setHeroImages(updatedImages);
     } else {
       alert("Error saving image: " + error.message);
     }
@@ -505,12 +504,8 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
   // --- Save Edited Hero ---
   const saveEditedHero = async (index: number) => {
-    const current = heroImages[index];
+    let newUrl = safeHeroImages[index].url;
 
-    let newUrl = current.url;
-    let newText = replaceHeroText || current.text;
-
-    // If image is replaced, upload new file
     if (replaceHeroImage) {
       const fileName = `${Date.now()}_${replaceHeroImage.name.replace(/\s/g, "_")}`;
       const { error: uploadError } = await supabase.storage.from("images").upload(fileName, replaceHeroImage);
@@ -520,22 +515,17 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
       newUrl = data.publicUrl;
     }
 
-    // Correct HeroImage[] array
-    const updatedImages: HeroImage[] = heroImages.map((img, i) =>
-      i === index ? { url: newUrl, text: newText } : img
-    );
+    const updatedImages = [...safeHeroImages];
+    updatedImages[index] = { url: newUrl, text: replaceHeroText || "" };
 
-    const { error } = await supabase
-      .from("frontpage")
-      .update({ hero_images: updatedImages })
-      .eq("id", 1);
+    const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
     if (!error) {
       alert("Hero image updated!");
       setEditingHeroIndex(null);
       setReplaceHeroImage(null);
       setReplaceHeroText("");
-      fetchHeroImages();
+      setHeroImages(updatedImages);
     } else {
       alert("Error saving image: " + error.message);
     }
@@ -545,23 +535,23 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
   const deleteHeroImage = async (index: number) => {
     if (!confirm("Are you sure you want to delete this image?")) return;
 
-    const updatedImages = heroImages.filter((_, i) => i !== index);
+    const updatedImages = safeHeroImages.filter((_, i) => i !== index);
     const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
-    if (!error) fetchHeroImages();
+    if (!error) setHeroImages(updatedImages);
     else alert("Error deleting: " + error.message);
   };
 
   // --- Reorder Hero Images ---
   const moveHeroImage = async (index: number, direction: "up" | "down") => {
     const newIndex = direction === "up" ? index - 1 : index + 1;
-    if (newIndex < 0 || newIndex >= heroImages.length) return;
+    if (newIndex < 0 || newIndex >= safeHeroImages.length) return;
 
-    const updated = [...heroImages];
+    const updated = [...safeHeroImages];
     [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
 
     const { error } = await supabase.from("frontpage").update({ hero_images: updated }).eq("id", 1);
-    if (!error) fetchHeroImages();
+    if (!error) setHeroImages(updated);
     else alert("Error reordering: " + error.message);
   };
 
@@ -575,7 +565,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
         </div>
         <div className="bg-blue-100 px-4 py-2 rounded-lg">
           <span className="text-sm font-semibold text-blue-800">
-            {heroImages.length} {heroImages.length === 1 ? "Image" : "Images"}
+            {safeHeroImages.length} {safeHeroImages.length === 1 ? "Image" : "Images"}
           </span>
         </div>
       </div>
@@ -586,15 +576,26 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
         <input type="file" accept="image/*" onChange={(e) => setNewHeroImage(e.target.files?.[0] || null)}
           className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white" />
         {newHeroImage && <img src={URL.createObjectURL(newHeroImage)} alt="Preview" className="w-full h-48 object-cover rounded-lg border-2 border-gray-200 mt-3" />}
-        <input type="text" placeholder="Optional text for hero image" value={newHeroText} onChange={(e) => setNewHeroText(e.target.value)}
-          className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white" />
+        <div className="relative">
+          <input type="text" placeholder="Optional text overlay for hero image" value={newHeroText} onChange={(e) => setNewHeroText(e.target.value)}
+            className="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white" />
+          {newHeroText && (
+            <button
+              onClick={() => setNewHeroText("")}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 font-bold"
+              title="Clear text"
+            >
+              ✕
+            </button>
+          )}
+        </div>
         <button onClick={addHeroImage} className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800">🚀 Add Hero Image</button>
       </div>
 
       {/* Current Hero Images */}
       <div>
         <h3 className="text-xl font-bold text-gray-800 mb-4">Current Hero Images</h3>
-        {heroImages.length === 0 ? (
+        {safeHeroImages.length === 0 ? (
           <div className="text-center py-16 bg-gray-50 rounded-xl border-2 border-dashed border-gray-300">
             <div className="text-6xl mb-4">🖼️</div>
             <p className="text-gray-500 font-medium">No hero images yet</p>
@@ -602,11 +603,11 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
           </div>
         ) : (
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {heroImages.map((image, index) => (
+            {safeHeroImages.map((image, index) => (
               <div key={index} className="bg-white rounded-xl shadow-lg overflow-hidden border-2 border-gray-200 hover:border-blue-400 transition-all">
                 <div className="relative h-64 bg-gray-100">
                   <img src={image.url} alt={`Hero image ${index + 1}`} className="w-full h-full object-cover" />
-                  {image.text && <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-sm">{image.text}</div>}
+                  {image.text && <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-black bg-opacity-50 text-white px-3 py-1 rounded text-sm max-w-[90%] text-center truncate">{image.text}</div>}
                   <div className="absolute top-3 left-3 bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold">#{index + 1}</div>
                 </div>
 
@@ -616,26 +617,44 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
                       <input type="file" accept="image/*" onChange={(e) => setReplaceHeroImage(e.target.files?.[0] || null)}
                         className="w-full text-sm px-3 py-2 border-2 border-gray-300 rounded-lg" />
                       {replaceHeroImage && <img src={URL.createObjectURL(replaceHeroImage)} alt="Preview" className="w-full h-32 object-cover rounded-lg border mb-2" />}
-                      <input type="text" placeholder="Optional text" value={replaceHeroText} onChange={(e) => setReplaceHeroText(e.target.value)}
-                        className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" />
-                      <button onClick={() => saveEditedHero(index)} className="w-full bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700">✓ Save</button>
+                      <div className="relative">
+                        <input type="text" placeholder="Optional text (leave empty for no text)" value={replaceHeroText} onChange={(e) => setReplaceHeroText(e.target.value)}
+                          className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-sm" />
+                        {replaceHeroText && (
+                          <button
+                            onClick={() => setReplaceHeroText("")}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 font-bold text-lg"
+                            title="Clear text"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                      <button onClick={() => saveEditedHero(index)} className="w-full bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-green-700">✓ Save Changes</button>
                       <button onClick={() => { setEditingHeroIndex(null); setReplaceHeroImage(null); setReplaceHeroText(""); }}
                         className="w-full bg-gray-200 text-gray-700 px-4 py-2 rounded-lg text-sm font-semibold hover:bg-gray-300">Cancel</button>
                     </div>
                   ) : (
-                    <div className="grid grid-cols-4 gap-2">
-                      <button onClick={() => { setEditingHeroIndex(index); setReplaceHeroText(image.text || ""); }}
-                        className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-all">✏️ Edit</button>
-                      <button onClick={() => deleteHeroImage(index)}
-                        className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-100 transition-all">🗑️ Delete</button>
+                    <div className="space-y-3">
+                      <div className="grid grid-cols-2 gap-2">
+                        <button onClick={() => { setEditingHeroIndex(index); setReplaceHeroText(image.text || ""); }}
+                          className="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg text-sm font-semibold hover:bg-blue-100 transition-all">✏️ Edit</button>
+                        <button onClick={() => deleteHeroImage(index)}
+                          className="px-4 py-2 bg-red-50 text-red-600 rounded-lg text-sm font-semibold hover:bg-red-100 transition-all">🗑️ Delete</button>
+                      </div>
+                      {image.text && (
+                        <div className="text-xs text-gray-600 bg-gray-50 p-2 rounded border border-gray-200">
+                          <span className="font-semibold">Text:</span> {image.text}
+                        </div>
+                      )}
                     </div>
                   )}
 
                   <div className="flex gap-2">
                     <button onClick={() => moveHeroImage(index, "up")} disabled={index === 0}
-                      className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all">↑ Move Up</button>
-                    <button onClick={() => moveHeroImage(index, "down")} disabled={index === heroImages.length - 1}
-                      className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all">↓ Move Down</button>
+                      className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all">↑ Up</button>
+                    <button onClick={() => moveHeroImage(index, "down")} disabled={index === safeHeroImages.length - 1}
+                      className="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition-all">↓ Down</button>
                   </div>
                 </div>
               </div>
