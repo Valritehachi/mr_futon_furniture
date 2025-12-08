@@ -109,7 +109,8 @@ export async function POST(req: NextRequest) {
 
     // Insert comment into Supabase
     console.log("💾 Inserting comment into database...");
-    const { data, error } = await supabase.from("comments").insert({
+    // const { data, error } = await supabase.from("comments").insert({
+    const { data, error } = await supabase().from("comments").insert({
       article_id: Number(articleId),
       author_name: name,
       comment: comment,
