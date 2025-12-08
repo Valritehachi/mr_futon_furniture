@@ -11,7 +11,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const getUser = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
+      const { data: { user } } = await supabase().auth.getUser();
       if (user) {
         setUserEmail(user.email || "");
         const name = user.email?.split("@")[0] || "Admin";
@@ -20,7 +20,7 @@ export default function DashboardPage() {
     };
 
     const getArticleCount = async () => {
-      const { count } = await supabase
+      const { count } = await supabase()
         .from("blog")
         .select("*", { count: "exact", head: true });
       setArticleCount(count || 0);
