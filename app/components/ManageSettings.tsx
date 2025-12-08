@@ -20,7 +20,7 @@ export default function ManageSettings({
 }: ManageSettingsProps) {
   
   const saveSettings = async () => {
-    const { error } = await supabase
+    const { error } = await supabase()
       .from("settings")
       .update({
         store_email: email,

@@ -85,7 +85,7 @@ export default function MovingPromotions() {
     const fetchPromotions = async () => {
       const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
 
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from('promotions')
         .select('*')
         .lte('start_date', today)
@@ -96,10 +96,12 @@ export default function MovingPromotions() {
         console.error('Error fetching promotions:', error);
         return;
       }
-
       const texts = (data || []).map(
-        (p) => (p.special_price ? `${p.title} - ${p.special_price}` : p.title)
+        (p: any) => (p.special_price ? `${p.title} - ${p.special_price}` : p.title)
       );
+      // const texts = (data || []).map(
+      //   (p) => (p.special_price ? `${p.title} - ${p.special_price}` : p.title)
+      // );
 
       setPromoTexts(texts);
     };
