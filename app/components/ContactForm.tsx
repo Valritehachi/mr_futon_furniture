@@ -6,6 +6,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 export default function ContactForm() {
   const [lastName, setLastName] = useState("");
   const [firstName, setFirstName] = useState("");
+  const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
