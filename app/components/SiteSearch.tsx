@@ -22,7 +22,7 @@ export default function SiteSearch() {
   useEffect(() => {
     const fetchItems = async () => {
       // Fetch Products
-      const { data: products, error: prodError } = await supabase
+      const { data: products, error: prodError } = await supabase()
         .from("products")
         .select("id, name, image_url, category");
 
