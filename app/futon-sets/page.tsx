@@ -31,7 +31,7 @@ export default function FutonSetsPage() {
 
   useEffect(() => {
     const fetchFutonSets = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("category", "Futon Sets")

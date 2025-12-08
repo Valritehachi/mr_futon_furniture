@@ -211,7 +211,7 @@ export default function ProductPage({ params }: { params: Promise<{ id: string }
     const fetchProduct = async () => {
       console.log("Fetching product with ID:", id);
       
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("id", id)

@@ -139,7 +139,7 @@ export default function BlogPage() {
 
   useEffect(() => {
     const fetchArticles = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("blog")
         .select("*")
         .order("created_at", { ascending: false });

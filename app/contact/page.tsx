@@ -19,7 +19,7 @@ export default function ContactPage() {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("settings")
         .select("store_phone, store_email, working_hours")
         .eq("id", 1)

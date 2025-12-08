@@ -31,7 +31,7 @@ export default function MattressesPage() {
 
   useEffect(() => {
     const fetchMattresses = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("category", "Mattresses")

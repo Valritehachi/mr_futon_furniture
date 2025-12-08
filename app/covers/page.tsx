@@ -31,7 +31,7 @@ export default function CoversPage() {
 
   useEffect(() => {
     const fetchCovers = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("category", "Covers")
