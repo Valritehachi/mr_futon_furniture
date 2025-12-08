@@ -248,7 +248,7 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
   }, []);
 
   const fetchAdvertImages = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabase()
       .from("frontpage")
       .select("advert_images")
       .single();
@@ -272,18 +272,18 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
       // Upload new image if selected
       if (replaceImage) {
         const fileName = `${Date.now()}_${replaceImage.name.replace(/\s/g, "_")}`;
-        const { error: uploadError } = await supabase.storage
+        const { error: uploadError } = await supabase().storage
           .from("images")
           .upload(fileName, replaceImage);
 
         if (uploadError) throw uploadError;
 
-        const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+        const { data } = supabase().storage.from("images").getPublicUrl(fileName);
         imageUrl = data.publicUrl;
       }
 
       // Fetch current data
-      const { data: currentData, error: fetchError } = await supabase
+      const { data: currentData, error: fetchError } = await supabase()
         .from("frontpage")
         .select("advert_images")
         .single();
@@ -299,7 +299,7 @@ export default function ManageAdverts({ advertImages, setAdvertImages }: ManageA
         },
       };
 
-      const { error: updateError } = await supabase
+      const { error: updateError } = await supabase()
         .from("frontpage")
         .update({ advert_images: updatedAdverts })
         .eq("id", 1);

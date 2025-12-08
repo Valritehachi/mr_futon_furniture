@@ -9,7 +9,7 @@ const Logo = () => {
 
   useEffect(() => {
     const fetchLogo = async () => {
-      const { data } = supabase.storage
+      const { data } = supabase().storage
         .from('images') // bucket name
         .getPublicUrl('logo_image.png'); // file name
       setLogoUrl(data.publicUrl);

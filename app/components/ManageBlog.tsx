@@ -44,7 +44,7 @@ export default function ManageBlog({ articles, fetchArticles }: ManageBlogProps)
     const fileName = `${Date.now()}_${imageFile.name}`;
     const safeFileName = fileName.replace(/\s/g, "_");
 
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase().storage
       .from(bucket)
       .upload(safeFileName, imageFile);
 
@@ -54,7 +54,7 @@ export default function ManageBlog({ articles, fetchArticles }: ManageBlogProps)
       return null;
     }
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(safeFileName);
+    const { data } = supabase().storage.from(bucket).getPublicUrl(safeFileName);
     return data.publicUrl;
   };
 
@@ -68,7 +68,7 @@ export default function ManageBlog({ articles, fetchArticles }: ManageBlogProps)
     let imageUrl = await uploadImage("images");
 
     if (editingArticleId) {
-      const { error } = await supabase
+      const { error } = await supabase()
         .from("blog")
         .update({
           title: articleTitle,
@@ -78,7 +78,7 @@ export default function ManageBlog({ articles, fetchArticles }: ManageBlogProps)
         .eq("id", editingArticleId);
       if (error) console.error(error);
     } else {
-      const { error } = await supabase
+      const { error } = await supabase()
         .from("blog")
         .insert([{
           title: articleTitle,
@@ -96,7 +96,7 @@ export default function ManageBlog({ articles, fetchArticles }: ManageBlogProps)
 
   const deleteArticle = async (id: number) => {
     if (!confirm("Are you sure you want to delete this article?")) return;
-    const { error } = await supabase.from("blog").delete().eq("id", id);
+    const { error } = await supabase().from("blog").delete().eq("id", id);
     if (error) console.error(error);
     fetchArticles();
   };
