@@ -131,7 +131,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     const fileName = `${Date.now()}_${imageFile.name}`;
     const safeFileName = fileName.replace(/\s/g, "_");
 
-    const { error: uploadError } = await supabase.storage
+    const { error: uploadError } = await supabase().storage
       .from(bucket)
       .upload(safeFileName, imageFile);
 
@@ -141,14 +141,14 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
       return null;
     }
 
-    const { data } = supabase.storage.from(bucket).getPublicUrl(safeFileName);
+    const { data } = supabase().storage.from(bucket).getPublicUrl(safeFileName);
     return data.publicUrl;
   };
 
   const uploadMattressImage = async (file: File, index: number): Promise<string | null> => {
     const fileName = `${Date.now()}_${file.name.replace(/\s/g, "_")}`;
-    
-    const { error } = await supabase.storage
+
+    const { error } = await supabase().storage
       .from("images")
       .upload(fileName, file);
 
@@ -158,7 +158,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
       return null;
     }
 
-    const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+    const { data } = supabase().storage.from("images").getPublicUrl(fileName);
     return data.publicUrl;
   };
 
@@ -200,12 +200,12 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
         if (m.image instanceof File) {
           const fileName = `${Date.now()}_${m.image.name.replace(/\s/g, "_")}`;
 
-          const { error: uploadError } = await supabase.storage
+          const { error: uploadError } = await supabase().storage
             .from("images")
             .upload(fileName, m.image);
 
           if (!uploadError) {
-            const { data } = supabase.storage
+            const { data } = supabase().storage
               .from("images")
               .getPublicUrl(fileName);
 
@@ -222,7 +222,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
     }
 
     if (editingProductId) {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .update({
           name: productName,
@@ -243,7 +243,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
         return;
       }
     } else {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .insert([{
           name: productName,
@@ -271,7 +271,7 @@ export default function ManageProducts({ products, fetchProducts }: ManageProduc
 
   const deleteProduct = async (id: number) => {
     if (!confirm("Are you sure you want to delete this product?")) return;
-    const { error } = await supabase.from("products").delete().eq("id", id);
+    const { error } = await supabase().from("products").delete().eq("id", id);
     if (error) console.error(error);
     fetchProducts();
   };

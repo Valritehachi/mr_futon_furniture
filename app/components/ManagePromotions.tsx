@@ -24,7 +24,7 @@ export default function ManagePromotions() {
 
   // Fetch all promotions
   const fetchPromotions = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabase()
       .from('promotions')
       .select('*')
       .order('priority', { ascending: false });
@@ -46,7 +46,7 @@ export default function ManagePromotions() {
 
     if (editingId) {
       // Update
-      await supabase.from('promotions')
+      await supabase().from('promotions')
         .update({
           title,
           special_price: specialPrice,
@@ -57,7 +57,7 @@ export default function ManagePromotions() {
         .eq('id', editingId);
     } else {
       // Insert
-      await supabase.from('promotions')
+      await supabase().from('promotions')
         .insert([{ title, special_price: specialPrice, start_date: startDate, end_date: endDate, priority }]);
     }
 
@@ -76,7 +76,7 @@ export default function ManagePromotions() {
 
   const deletePromotion = async (id: number) => {
     if (!confirm("Delete this promotion?")) return;
-    await supabase.from('promotions').delete().eq('id', id);
+    await supabase().from('promotions').delete().eq('id', id);
     fetchPromotions();
   };
 

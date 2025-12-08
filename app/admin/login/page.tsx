@@ -16,7 +16,7 @@ export default function AdminLogin(): JSX.Element {
     setLoading(true);
     setError(null);
 
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase().auth.signInWithPassword({
       email,
       password,
     });

@@ -58,7 +58,7 @@ export default function ArticlesEditor() {
   const fetchProducts = async () => {
     console.log("🛋️ Starting fetchProducts...");
     
-    const { data, error } = await supabase
+    const { data, error } = await supabase()
       .from("products")
       .select("*")
       .order("created_at", { ascending: false });
@@ -76,7 +76,7 @@ export default function ArticlesEditor() {
 
   // Fetch Articles
   const fetchArticles = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabase()
       .from("blog")
       .select("*")
       .order("created_at", { ascending: false });
@@ -96,7 +96,7 @@ export default function ArticlesEditor() {
   // Load Settings
   useEffect(() => {
     const loadSettings = async () => {
-      const { data } = await supabase.from("settings").select("*").single();
+      const { data } = await supabase().from("settings").select("*").single();
 
       if (data) {
         setEmail(data.store_email || "");
@@ -120,7 +120,7 @@ export default function ArticlesEditor() {
   // Load Front Page - FIXED VERSION
   useEffect(() => {
     const loadFrontPage = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("frontpage")
         .select("hero_images")
         .eq("id", 1)
@@ -164,7 +164,8 @@ export default function ArticlesEditor() {
               }
               return null;
             })
-            .filter((img): img is HeroImage => 
+            // .filter((img): img is HeroImage => 
+            .filter((img: any): img is HeroImage =>
               img !== null && 
               typeof img.url === 'string' && 
               img.url.length > 0 &&

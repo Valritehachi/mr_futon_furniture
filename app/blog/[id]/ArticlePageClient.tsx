@@ -20,7 +20,7 @@ export default function ArticlePageClient({ id }: { id: string }) {
   useEffect(() => {
     const fetchArticle = async () => {
       // Fetch current article
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("blog")
         .select("*")
         .eq("id", id)
@@ -31,7 +31,7 @@ export default function ArticlePageClient({ id }: { id: string }) {
 
     const fetchAdjacentArticles = async () => {
       // Fetch previous article (older article with id < current)
-      const { data: prevData } = await supabase
+      const { data: prevData } = await supabase()
         .from("blog")
         .select("*")
         .lt("id", id)
@@ -42,7 +42,7 @@ export default function ArticlePageClient({ id }: { id: string }) {
       if (prevData) setPreviousArticle(prevData as Article);
 
       // Fetch next article (newer article with id > current)
-      const { data: nextData } = await supabase
+      const { data: nextData } = await supabase()
         .from("blog")
         .select("*")
         .gt("id", id)

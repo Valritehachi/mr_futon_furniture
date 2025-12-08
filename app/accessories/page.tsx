@@ -41,7 +41,7 @@ export default function () {
 
   useEffect(() => {
     const fetchAccessories = async () => {
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("category", "Accessories")

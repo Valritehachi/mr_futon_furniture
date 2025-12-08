@@ -42,7 +42,7 @@ export default function Home() {
   useEffect(() => {
     const loadFeaturedProduct = async () => {
       
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("products")
         .select("*")
         .eq("featured", true)
@@ -62,7 +62,7 @@ export default function Home() {
     const fetchPromotions = async () => {
       const today = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
 
-      const { data, error } = await supabase
+      const { data, error } = await supabase()
         .from("promotions")
         .select("*")
         .lte("start_date", today)
@@ -75,8 +75,12 @@ export default function Home() {
       }
 
       // Filter only homepage placements and valid images
+      // const activePromos = (data || []).filter(
+      //   p => p.placement?.includes("homepage") && p.image_url
+      // );
+
       const activePromos = (data || []).filter(
-        p => p.placement?.includes("homepage") && p.image_url
+        (p: Promotion) => p.placement?.includes("homepage") && p.image_url
       );
 
       setPromotions(activePromos);
@@ -97,7 +101,7 @@ export default function Home() {
 
   useEffect(() => {
     const fetchAdvertImages = async () => {
-      const { data } = await supabase
+      const { data } = await supabase()
         .from("frontpage")
         .select("advert_images")
         .eq("id", 1)

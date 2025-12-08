@@ -442,7 +442,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
   // --- Fetch hero images and adverts ---
   const fetchHeroImages = async () => {
-    const { data, error } = await supabase
+    const { data, error } = await supabase()
       .from("frontpage")
       .select("hero_images, advert_images")
       .eq("id", 1)
@@ -472,13 +472,13 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     if (!newHeroImage) return alert("Please select an image");
 
     const fileName = `${Date.now()}_${newHeroImage.name.replace(/\s/g, "_")}`;
-    const { error: uploadError } = await supabase.storage.from("images").upload(fileName, newHeroImage);
+    const { error: uploadError } = await supabase().storage.from("images").upload(fileName, newHeroImage);
     if (uploadError) return alert("Upload error: " + uploadError.message);
 
-    const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+    const { data } = supabase().storage.from("images").getPublicUrl(fileName);
     const publicUrl = data.publicUrl;
 
-    const { data: currentData } = await supabase
+    const { data: currentData } = await supabase()
       .from("frontpage")
       .select("hero_images")
       .eq("id", 1)
@@ -490,7 +490,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
     const updatedImages = [...currentImages, { url: publicUrl, text: newHeroText || "" }];
 
-    const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
+    const { error } = await supabase().from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
     if (!error) {
       alert("Hero image added!");
@@ -508,17 +508,17 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
 
     if (replaceHeroImage) {
       const fileName = `${Date.now()}_${replaceHeroImage.name.replace(/\s/g, "_")}`;
-      const { error: uploadError } = await supabase.storage.from("images").upload(fileName, replaceHeroImage);
+      const { error: uploadError } = await supabase().storage.from("images").upload(fileName, replaceHeroImage);
       if (uploadError) return alert("Upload error: " + uploadError.message);
 
-      const { data } = supabase.storage.from("images").getPublicUrl(fileName);
+      const { data } = supabase().storage.from("images").getPublicUrl(fileName);
       newUrl = data.publicUrl;
     }
 
     const updatedImages = [...safeHeroImages];
     updatedImages[index] = { url: newUrl, text: replaceHeroText || "" };
 
-    const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
+    const { error } = await supabase().from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
     if (!error) {
       alert("Hero image updated!");
@@ -536,7 +536,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     if (!confirm("Are you sure you want to delete this image?")) return;
 
     const updatedImages = safeHeroImages.filter((_, i) => i !== index);
-    const { error } = await supabase.from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
+    const { error } = await supabase().from("frontpage").update({ hero_images: updatedImages }).eq("id", 1);
 
     if (!error) setHeroImages(updatedImages);
     else alert("Error deleting: " + error.message);
@@ -550,7 +550,7 @@ export default function ManageFrontPage({ heroImages, setHeroImages }: ManageFro
     const updated = [...safeHeroImages];
     [updated[index], updated[newIndex]] = [updated[newIndex], updated[index]];
 
-    const { error } = await supabase.from("frontpage").update({ hero_images: updated }).eq("id", 1);
+    const { error } = await supabase().from("frontpage").update({ hero_images: updated }).eq("id", 1);
     if (!error) setHeroImages(updated);
     else alert("Error reordering: " + error.message);
   };
