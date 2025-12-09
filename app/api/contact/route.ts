@@ -9,6 +9,8 @@ export async function POST(request: Request) {
   try {
     const { name, email, message, token } = await request.json();
 
+    console.log("📧 Contact form data:", { name, email, message: message?.substring(0, 50) });
+
     // 1. Verify reCAPTCHA
     const recaptchaResponse = await fetch(
       "https://www.google.com/recaptcha/api/siteverify",
@@ -20,6 +22,7 @@ export async function POST(request: Request) {
     );
 
     const recaptchaData = await recaptchaResponse.json();
+    console.log("🔐 reCAPTCHA result:", recaptchaData);
 
     if (!recaptchaData.success) {
       console.error("reCAPTCHA verification failed:", recaptchaData);
@@ -28,7 +31,7 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
-
+    console.log("📤 Sending email...");
     // 2. Send email
     const msg = {
       to: process.env.EMAIL_TO,
