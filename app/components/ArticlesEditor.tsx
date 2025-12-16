@@ -7,6 +7,8 @@ import ManageBlog from "./ManageBlog";
 import ManageSettings from "./ManageSettings";
 import ManageFrontPage from "./ManageFrontpage";
 import ManagePromotions from "./ManagePromotions";
+import ManageSofaSleeperProducts from "./ManageSofaSleeperProducts";
+
 
 interface Product {
   id: number;
@@ -38,7 +40,14 @@ interface HeroImage {
 }
 
 export default function ArticlesEditor() {
-  const [activeTab, setActiveTab] = useState<"products" | "blog" | "frontpage" | "settings" | "promotions">("blog");
+  const [activeTab, setActiveTab] = useState<
+    | "products"
+    | "sofaSleepers"
+    | "blog"
+    | "frontpage"
+    | "settings"
+    | "promotions"
+  >("blog");
 
   // Products State
   const [products, setProducts] = useState<Product[]>([]);
@@ -47,7 +56,7 @@ export default function ArticlesEditor() {
   const [articles, setArticles] = useState<Article[]>([]);
   
   // Front Page State - INITIALIZE WITH EMPTY ARRAY
-  const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
+  // const [heroImages, setHeroImages] = useState<HeroImage[]>([]);
   
   // Settings State
   const [email, setEmail] = useState("");
@@ -174,7 +183,7 @@ export default function ArticlesEditor() {
         }
 
         console.log("Parsed hero images:", parsedImages);
-        setHeroImages(parsedImages);
+        // setHeroImages(parsedImages);
       }
     };
 
@@ -207,6 +216,19 @@ export default function ArticlesEditor() {
         >
           🛋️ Products
         </button>
+
+        <button
+          onClick={() => setActiveTab("sofaSleepers")}
+          className={`px-6 py-3 rounded-lg font-bold transition-all ${
+            activeTab === "sofaSleepers"
+              ? "bg-blue-600 text-white shadow-lg"
+              : "bg-white text-gray-600 hover:bg-gray-50"
+          }`}
+        >
+          🛋️ Sofa Sleepers
+        </button>
+
+
         <button
           onClick={() => setActiveTab("blog")}
           className={`px-6 py-3 rounded-lg font-bold transition-all ${
@@ -237,6 +259,8 @@ export default function ArticlesEditor() {
         >
           🖼️ Front Page
         </button>
+
+        
 
         <button
           onClick={() => setActiveTab("promotions")}
@@ -276,12 +300,14 @@ export default function ArticlesEditor() {
             setHours={setHours}
           />
         )}
+
+        {activeTab === "sofaSleepers" && (
+          <ManageSofaSleeperProducts /> 
+        )}
+
         
         {activeTab === "frontpage" && (
-          <ManageFrontPage
-            heroImages={heroImages}
-            setHeroImages={setHeroImages}
-          />
+          <ManageFrontPage />
         )}
 
         {activeTab === "promotions" && (
@@ -291,3 +317,5 @@ export default function ArticlesEditor() {
     </div>
   );
 }
+
+
