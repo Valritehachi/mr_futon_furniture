@@ -54,14 +54,15 @@ export default async function SpaceSaversPage() {
       <section className="max-w-6xl mx-auto px-4 grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
         {/* LEFT: HERO SLIDER */}
         <div className="lg:col-span-2 flex">
-          <div className="w-full min-h-[420px] bg-gray-100 rounded flex items-center justify-center">
+          <div className="bg-gray-100 p-6 text-center flex-1 flex flex-col justify-center">
             <SofaHeroSlider />
           </div>
         </div>
 
         {/* RIGHT: INFO / CTA */}
-        <div className="flex flex-col gap-6">
-          <div className="bg-gray-100 p-6 text-center">
+       
+        <div className="flex flex-col gap-10 h-full">
+          <div className="bg-gray-100 p-6 h-[260px] flex flex-col items-center justify-center text-center">
             <p className="italic font-bold text-lg">
               Small Sofa Convertibles For Small Rooms
             </p>
@@ -70,20 +71,19 @@ export default async function SpaceSaversPage() {
             </p>
           </div>
 
-          <div className="bg-gray-100 p-6 text-center">
+          <div className="bg-gray-100 p-6 min-h-[100px] flex items-center justify-center text-center">
             <p className="text-xl font-bold tracking-wide">
               CALL&nbsp; (561) 572-3267
             </p>
           </div>
 
+          {/* Show full image without cropping */}
           <div className="overflow-hidden rounded">
             <img
               src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/sofa_sleaper_promo.png"
               alt="Save up to 25 percent off"
-              className="w-full object-cover"
+              className="w-full h-auto object-contain"
             />
-
-            
           </div>
         </div>
       </section>

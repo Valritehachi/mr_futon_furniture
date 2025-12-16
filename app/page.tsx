@@ -224,12 +224,8 @@ export default function Home() {
 
           {/* Space Savers */}
           
-          <a
-            href="https://smallsofasleepers.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block"
-          >
+          <Link href="/space-savers" className="group relative rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all">
+            
           
             <div className="aspect-[4/3] relative">
               {advertImages.space_savers?.url && (
@@ -245,7 +241,7 @@ export default function Home() {
                 <p className="text-sm">{advertImages.space_savers.description}</p>
               </div>
             </div>
-          </a>
+          </Link>
          
 
           {/* Visit Showroom */}
