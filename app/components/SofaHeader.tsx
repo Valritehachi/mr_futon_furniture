@@ -11,13 +11,20 @@ export default function SofaHeader() {
         
         {/* LEFT: LOGO + TITLE */}
         <div className="flex items-center gap-4">
-          <Image
+          {/* <Image
             src="/images/sofasleapericon.png"
             alt="Small Sofa Icon"
             width={120}
             height={120}
             priority
+          /> */}
+          <img
+            src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/sofasleapericon.png"
+            alt="Sofa Sleeper"
+            width={120}
+            height={120}
           />
+
 
           <div>
             <h1 className="text-3xl font-extrabold">Small Sofa Sleeper Store</h1>
