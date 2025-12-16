@@ -137,15 +137,7 @@ export default function Navbar() {
               <Link href="/covers" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Covers</Link>
             </li>
             <li>
-              <a
-                href="https://smallsofasleepers.com/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block px-4 py-3 hover:bg-gray-100"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Space Savers
-              </a>
+              <Link href="/space-savers" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Space Savers</Link>
             </li>
             <li>
               <Link href="/accessories" className="block px-4 py-3 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>Accessories</Link>
