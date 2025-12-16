@@ -204,7 +204,7 @@ export default function SofaHeader() {
             onClick={() => router.push("/space-savers")}
             className="font-medium text-gray-700 hover:text-black whitespace-nowrap"
           >
-            Sofa Sleepers
+            📋 Top Categories
           </button>
 
           {/* SEARCH BAR */}

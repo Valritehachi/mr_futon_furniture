@@ -9,7 +9,8 @@ export default function SofaFooter() {
   };
   return (
 
-    <footer className="w-full bg-gradient-to-b from-gray-100 to-gray-200 border-t mt-24">
+    <footer className="relative w-full bg-gradient-to-b from-gray-100 to-gray-200 border-t mt-24">
+
       <div className="max-w-6xl mx-auto px-4 py-8">
         
         {/* NAV LINKS */}
