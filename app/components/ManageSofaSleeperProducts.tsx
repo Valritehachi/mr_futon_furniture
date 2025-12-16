@@ -5,7 +5,12 @@ import { supabase } from "@/utils/supabaseClient";
 import ManageSofaHeroImages from "./ManageSofaSleeperHero";
 
  
-import ReactQuill from "react-quill-new";
+
+import dynamic from "next/dynamic";
+
+const ReactQuill = dynamic(() => import("react-quill-new"), {
+  ssr: false,
+});
 
 interface SofaSleeperProduct {
   id?: number;
