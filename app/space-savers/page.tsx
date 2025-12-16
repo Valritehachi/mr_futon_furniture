@@ -147,12 +147,13 @@ export default async function SpaceSaversPage() {
         <div className="w-full max-w-5xl aspect-video rounded-xl overflow-hidden shadow-lg">
           <video
             className="w-full h-full object-cover"
-            src="/TwinSofaSleepervideo_opt.mp4"
+            src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/videos/TwinSofaSleepervideo_opt.mp4"
             controls
             muted
             loop
             playsInline
           />
+          
         </div>
       </section>
 
