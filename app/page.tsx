@@ -133,9 +133,9 @@ export default function Home() {
 
         <div className="font-bold text-base md:col-span-4 md:text-lg text-center lg:text-left lg:ml-[60px]">
           <SidebarPromo />
-          <div className="font-bold justify-start text-lg ml-[60px]">
+          {/* <div className="font-bold justify-start text-lg ml-[60px]">
             $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
-          </div>
+          </div> */}
         </div>
       </div>
 

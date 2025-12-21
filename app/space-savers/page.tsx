@@ -62,7 +62,7 @@ export default async function SpaceSaversPage() {
         {/* RIGHT: INFO / CTA */}
        
         <div className="flex flex-col gap-10 h-full">
-          <div className="bg-gray-100 p-6 h-[260px] flex flex-col items-center justify-center text-center">
+          <div className="bg-gray-100 mt-20 p-6 h-[260px] flex flex-col items-center justify-center text-center">
             <p className="italic font-bold text-lg">
               Small Sofa Convertibles For Small Rooms
             </p>
@@ -71,20 +71,20 @@ export default async function SpaceSaversPage() {
             </p>
           </div>
 
-          <div className="bg-gray-100 p-6 min-h-[100px] flex items-center justify-center text-center">
+          <div className="bg-gray-100 p-6 mt-10 min-h-[100px] flex items-center justify-center text-center">
             <p className="text-xl font-bold tracking-wide">
               CALL&nbsp; (561) 572-3267
             </p>
           </div>
 
           {/* Show full image without cropping */}
-          <div className="overflow-hidden rounded">
+          {/* <div className="overflow-hidden rounded">
             <img
               src="https://obkhemmqcmujtwykliwf.supabase.co/storage/v1/object/public/images/sofa_sleaper_promo.png"
               alt="Save up to 25 percent off"
               className="w-full h-auto object-contain"
             />
-          </div>
+          </div> */}
         </div>
       </section>
 
