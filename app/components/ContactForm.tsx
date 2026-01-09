@@ -8,6 +8,7 @@ export default function ContactForm() {
   const [firstName, setFirstName] = useState("");
   const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState<string | null>(null);
@@ -35,6 +36,7 @@ export default function ContactForm() {
         body: JSON.stringify({
           name: `${firstName} ${lastName}`,
           email,
+          phone,
           message,
           token,
         }),
@@ -50,6 +52,7 @@ export default function ContactForm() {
         setFirstName("");
         setLastName("");
         setEmail("");
+        setPhone("");
         setMessage("");
         recaptchaRef.current?.reset();
       }
@@ -98,6 +101,15 @@ export default function ContactForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
+        className="w-full p-3 border rounded-lg"
+      />
+
+      {/* Phone (Optional) */}
+      <input
+        type="tel"
+        placeholder="Phone Number (optional)"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
         className="w-full p-3 border rounded-lg"
       />
 

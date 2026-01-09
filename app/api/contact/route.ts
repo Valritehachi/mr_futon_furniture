@@ -7,9 +7,9 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
 
 export async function POST(request: Request) {
   try {
-    const { name, email, message, token } = await request.json();
+    const { name, email, phone, message, token } = await request.json();
 
-    console.log("📧 Contact form data:", { name, email, message: message?.substring(0, 50) });
+    console.log("📧 Contact form data:", { name, email, phone, message: message?.substring(0, 50) });
 
     // 1. Verify reCAPTCHA
     const recaptchaResponse = await fetch(
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       subject: `New contact form submission from ${name}`,
       text: `
         Name: ${name}
+        Phone: ${phone || "N/A"}
         Email: ${email}
 
         Message:
@@ -49,6 +50,7 @@ export async function POST(request: Request) {
       html: `
         <h3>New Contact Form Submission</h3>
         <p><strong>Name:</strong> ${name}</p>
+        <p><strong>Phone:</strong> ${phone || "N/A"}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Message:</strong></p>
         <p>${message.replace(/\n/g, "<br>")}</p>

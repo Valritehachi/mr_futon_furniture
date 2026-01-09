@@ -71,7 +71,7 @@ export default async function SpaceSaversPage() {
             </p>
           </div>
 
-          <div className="bg-gray-100 p-6 mt-10 min-h-[100px] flex items-center justify-center text-center">
+          <div className="bg-gray-100 p-6 mt-6 min-h-[100px] flex items-center justify-center text-center">
             <p className="text-xl font-bold tracking-wide">
               CALL&nbsp; (561) 572-3267
             </p>
