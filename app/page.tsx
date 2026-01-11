@@ -74,11 +74,6 @@ export default function Home() {
         return;
       }
 
-      // Filter only homepage placements and valid images
-      // const activePromos = (data || []).filter(
-      //   p => p.placement?.includes("homepage") && p.image_url
-      // );
-
       const activePromos = (data || []).filter(
         (p: Promotion) => p.placement?.includes("homepage") && p.image_url
       );
