@@ -9,10 +9,15 @@ interface HeroImage {
   text?: string;
 }
 
+const DEFAULT_IMAGES: HeroImage[] = [
+  { url: "/images/futon_hero_1.jpg" },
+  { url: "/images/futon_hero_2.jpg" },
+  { url: "/images/futon_hero_3.jpg" },
+];
+
 export default function SofaHeroSlider() {
-  const [images, setImages] = useState<HeroImage[]>([]);
+  const [images, setImages] = useState<HeroImage[]>(DEFAULT_IMAGES);
   const [index, setIndex] = useState(0);
-  const [loading, setLoading] = useState(true);
 
   /** --------------------------------------------------------
    * FETCH sofa_hero_images FROM SUPABASE
@@ -27,7 +32,6 @@ export default function SofaHeroSlider() {
 
       if (error) {
         console.error("❌ Error fetching sofa hero images:", error);
-        setLoading(false);
         return;
       }
 
@@ -69,9 +73,8 @@ export default function SofaHeroSlider() {
         }
       }
 
-      // NOW temp[] contains ONLY HeroImage objects, NOT null
-      setImages(temp);
-      setLoading(false);
+      // Override defaults only when Supabase has images configured
+      if (temp.length > 0) setImages(temp);
     }
 
     fetchImages();
@@ -86,24 +89,6 @@ export default function SofaHeroSlider() {
     );
     return () => clearInterval(timer);
   }, [images.length]);
-
-  /** LOADING STATE */
-  if (loading) {
-    return (
-      <div className="h-[300px] w-full bg-gray-100 rounded flex items-center justify-center">
-        <div className="animate-pulse text-gray-400">Loading images…</div>
-      </div>
-    );
-  }
-
-  /** EMPTY STATE */
-  if (images.length === 0) {
-    return (
-      <div className="h-[300px] w-full bg-gray-100 rounded flex items-center justify-center">
-        <p className="text-gray-400">No sofa slider images yet</p>
-      </div>
-    );
-  }
 
   /** --------------------------------------------------------
    * RENDER SLIDER
