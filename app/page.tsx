@@ -2,6 +2,7 @@
 
 import HeroSlider from '@/app/components/HeroSlider';
 import SidebarPromo from '@/app/components/SidebarPromo';
+import PromoOffer from '@/app/components/PromoOffer';
 import Footer from '@/app/components/Footer';
 import Navbar from './components/Navbar';
 import Logo from './components/Logo';
@@ -128,9 +129,7 @@ export default function Home() {
 
         <div className="font-bold text-base md:col-span-4 md:text-lg text-center lg:text-left lg:ml-[60px]">
           <SidebarPromo />
-          {/* <div className="font-bold justify-start text-lg ml-[60px]">
-            $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
-          </div> */}
+          <PromoOffer />
         </div>
       </div>
 

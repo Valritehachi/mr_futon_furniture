@@ -118,6 +118,7 @@
 import { useEffect, useState } from "react";
 import Logo from "@/app/components/Logo";
 import SidebarPromo from "../components/SidebarPromo";
+import PromoOffer from "../components/PromoOffer";
 import HeroSlider from "../components/HeroSlider";
 import Navbar from "@/app/components/Navbar";
 import ReadMoreButton from "../components/ReadMoreButton";
@@ -168,9 +169,7 @@ export default function BlogPage() {
         {/* Sidebar Promo + Text */}
         <div className="md:col-span-4 flex flex-col gap-4">
           <SidebarPromo />
-          <div className="font-bold justify-start text-lg ml-[60px]">
-            $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
-          </div>
+          <PromoOffer />
         </div>
       </div>
 

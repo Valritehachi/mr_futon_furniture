@@ -125,6 +125,10 @@ export type Database = {
       settings: {
         Row: {
           id: number
+          promo_message: string | null
+          promo_offer: string | null
+          promo_subtitle: string | null
+          promo_title: string | null
           store_email: string | null
           store_phone: string | null
           updated_at: string | null
@@ -132,6 +136,10 @@ export type Database = {
         }
         Insert: {
           id?: number
+          promo_message?: string | null
+          promo_offer?: string | null
+          promo_subtitle?: string | null
+          promo_title?: string | null
           store_email?: string | null
           store_phone?: string | null
           updated_at?: string | null
@@ -139,6 +147,10 @@ export type Database = {
         }
         Update: {
           id?: number
+          promo_message?: string | null
+          promo_offer?: string | null
+          promo_subtitle?: string | null
+          promo_title?: string | null
           store_email?: string | null
           store_phone?: string | null
           updated_at?: string | null

@@ -62,6 +62,10 @@ export default function ArticlesEditor() {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [hours, setHours] = useState([""]);
+  const [promoTitle, setPromoTitle] = useState("High Quality Futon Sofa Sleepers");
+  const [promoSubtitle, setPromoSubtitle] = useState("All Futons and Frames are Made in the USA");
+  const [promoMessage, setPromoMessage] = useState("Our prices are less than Amazon, Wayfair or any online futon store in the USA. Same item. Better Quality.");
+  const [promoOffer, setPromoOffer] = useState("$99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.");
 
   // Fetch Products
   const fetchProducts = async () => {
@@ -110,6 +114,10 @@ export default function ArticlesEditor() {
       if (data) {
         setEmail(data.store_email || "");
         setPhone(data.store_phone || "");
+        setPromoTitle(data.promo_title || "High Quality Futon Sofa Sleepers");
+        setPromoSubtitle(data.promo_subtitle || "All Futons and Frames are Made in the USA");
+        setPromoMessage(data.promo_message || "Our prices are less than Amazon, Wayfair or any online futon store in the USA. Same item. Better Quality.");
+        setPromoOffer(data.promo_offer ?? "");
 
         const raw = data.working_hours;
 
@@ -298,6 +306,14 @@ export default function ArticlesEditor() {
             setPhone={setPhone}
             hours={hours}
             setHours={setHours}
+            promoTitle={promoTitle}
+            setPromoTitle={setPromoTitle}
+            promoSubtitle={promoSubtitle}
+            setPromoSubtitle={setPromoSubtitle}
+            promoMessage={promoMessage}
+            setPromoMessage={setPromoMessage}
+            promoOffer={promoOffer}
+            setPromoOffer={setPromoOffer}
           />
         )}
 

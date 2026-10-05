@@ -4,6 +4,7 @@ import Logo from "@/app/components/Logo";
 import Navbar from "@/app/components/Navbar";
 import HeroSlider from "@/app/components/HeroSlider";
 import SidebarPromo from "@/app/components/SidebarPromo";
+import PromoOffer from "@/app/components/PromoOffer";
 import ContactForm from "../components/ContactForm";
 import Footer from "@/app/components/Footer";
 import Image from "next/image";
@@ -65,9 +66,7 @@ export default function ContactPage() {
           {/* Sidebar Promo + Text */}
           <div className="md:col-span-4 flex flex-col gap-4">
             <SidebarPromo />
-            <div className="font-bold justify-start text-lg ml-[60px]">
-              $99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.
-            </div>
+            <PromoOffer />
           </div>
         </div>
 
