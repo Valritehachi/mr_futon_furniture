@@ -3,14 +3,12 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabaseClient";
 
-const DEFAULT_OFFER = "$99 PREMIUM 8 MATTRESS WITH FRAME PURCHASE.";
-
 export default function PromoOffer({
   className = "font-bold justify-start text-lg ml-[60px]",
 }: {
   className?: string;
 }) {
-  const [offer, setOffer] = useState(DEFAULT_OFFER);
+  const [offer, setOffer] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchOffer = async () => {
@@ -22,6 +20,7 @@ export default function PromoOffer({
 
       if (error) {
         console.error("Failed to fetch promotional offer:", error);
+        setOffer("");
         return;
       }
 
@@ -31,7 +30,7 @@ export default function PromoOffer({
     fetchOffer();
   }, []);
 
-  if (!offer.trim()) return null;
+  if (offer === null || !offer.trim()) return null;
 
   return <div className={className}>{offer}</div>;
 }
