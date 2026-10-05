@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabaseClient";
 import ArticlesEditor from "@/app/components/ArticlesEditor";
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [userEmail, setUserEmail] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [articleCount, setArticleCount] = useState<number>(0);
+
+  const handleLogout = async () => {
+    const { error } = await supabase().auth.signOut();
+    if (error) {
+      console.error("Failed to sign out:", error);
+      return;
+    }
+    router.replace("/admin/login");
+  };
 
   useEffect(() => {
     const getUser = async () => {
@@ -59,7 +70,14 @@ export default function DashboardPage() {
             </div>
 
             {/* Right Side - Stats Cards */}
-            <div className="flex gap-4 w-full lg:w-auto">
+            <div className="flex flex-col gap-4 w-full lg:w-auto">
+              <button
+                onClick={handleLogout}
+                className="self-end rounded-lg bg-white/15 px-4 py-2 font-semibold text-white transition hover:bg-white/25"
+              >
+                Log out
+              </button>
+              <div className="flex gap-4">
               <div className="bg-white/20 backdrop-blur-md rounded-2xl p-6 min-w-[160px] shadow-xl">
                 <div className="text-center">
                   <div className="text-3xl mb-2">📰</div>
@@ -83,6 +101,7 @@ export default function DashboardPage() {
                     })}
                   </div>
                 </div>
+              </div>
               </div>
             </div>
           </div>
