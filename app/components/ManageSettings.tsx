@@ -161,7 +161,7 @@ export default function ManageSettings({
     </div>
     <div className="bg-white rounded-xl shadow-lg p-8 space-y-5">
       <div>
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">📝 Homepage Promo Text</h2>
+        <h2 className="text-3xl font-bold text-gray-800 mb-2">📝 Black Box Promo Text</h2>
         <p className="text-gray-600">Edit the wording shown in the dark promo box and add optional text below it. Styling stays the same.</p>
       </div>
 
